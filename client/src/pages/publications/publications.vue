@@ -1,0 +1,143 @@
+<template>
+  <v-container flex
+               app
+  >
+
+    <v-layout>
+      <v-card
+        class="flex-0-0-100 black--text ml-auto"
+        color="teal-darken-1"
+      >
+        <v-row>
+          <v-col md="8"
+          >
+            <v-text-field
+              prepend-icon="mdi-magnify"
+              hide-details
+              single-line
+              class="flex-1-0-1 ml-5 mt-1"
+              bg-color="grey"
+              color="grey"
+              v-model="searchField"
+            ></v-text-field>
+
+          </v-col>
+          <v-col md="auto"
+          >
+            <v-card-actions class="d-flex justify-end"
+            >
+              <v-btn
+                @click="search"
+                class="justify-end flex-1-1 ma-2"
+              >
+                Поиск
+              </v-btn>
+              <v-btn
+                @click="addPublish"
+                class="justify-end flex-1-1 ma-2"
+              >
+                Добавить объявление
+              </v-btn>
+            </v-card-actions>
+          </v-col>
+        </v-row>
+      </v-card>
+    </v-layout>
+
+    <v-layout>
+      <v-row class="list__publications">
+        <v-col md="4" v-for="item in publications" :key="item.id">
+          <v-card @click="openPublication(item.id)"
+          >
+
+            <v-img
+              height="250"
+              :src="item.img"
+            ></v-img> <!-- С помощью v-img добавляем изображение карточки -->
+
+            <v-card-title> <!-- Заголовок заведения -->
+              <h3 class="text-h4">{{ item.title }}</h3>
+            </v-card-title>
+
+            <v-card-text> <!-- Описание заведения -->
+              <p class="text-body-1">{{ item.description }}</p>
+            </v-card-text>
+
+          </v-card>
+        </v-col>
+      </v-row>
+
+    </v-layout>
+  </v-container>
+</template>
+
+<script>
+import UserHelper from "@/utils/user-helper";
+import router from "@/router";
+import axios from "axios";
+
+export default {
+  name: "publications",
+  data() {
+    return {
+      publications: null,
+      searchField: null
+    }
+  },
+  methods: {
+    addPublish() {
+      if (UserHelper.isAuthorized()) {
+        console.log("Authorized");
+        this.$router.push('/add-publication');
+        // , {
+        //     path: '/add-publication',
+        //       params: {
+        //       id: 0
+        //     }
+        //   }
+      } else {
+        this.$router.push("/login")
+      }
+      console.log("end");
+    },
+    search() {
+      console.log("this.searchField", this.searchField)
+      if (this.searchField !== null && this.searchField !== '') {
+        axios.get("/publications/find", {
+          params: {
+            title: this.searchField
+          }
+        }).then(response => {
+          console.log(response.data)
+          this.publications = response.data;
+        })
+      } else {
+        axios.get("/publications/list/last").then(response => {
+          console.log("response:", response);
+          this.publications = response.data;
+        }).catch(error => {
+          console.log("error", error)
+        });
+      }
+    },
+    openPublication(id) {
+      console.log(id);
+      id = 1;
+      this.$router.push("/publications/publication/" + id);
+    }
+  },
+  mounted() {
+    console.log(localStorage.getItem('access_token'));
+    axios.get("/publications/list/last").then(response => {
+      console.log("response:", response);
+      this.publications = response.data;
+    }).catch(error => {
+      console.log("error", error)
+    });
+  }
+}
+</script>
+
+<style scoped lang="sass">
+
+</style>

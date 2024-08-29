@@ -1,0 +1,60 @@
+<template>
+  <v-app>
+    <app-header :username="username"
+    />
+
+
+    <v-main class="bg-white">
+      <router-view />
+    </v-main>
+
+    <AppFooter/>
+  </v-app>
+</template>
+
+<script>
+
+import AppFooter from "@/components/AppFooter.vue";
+import AppHeader from "@/components/app-header.vue";
+import axios from "axios";
+
+export default {
+  name: 'App',
+  components: {
+    AppHeader,
+    AppFooter
+  },
+  computed: {
+    username() {
+      return localStorage.getItem('username');
+    }
+  },
+  data() {
+    return {
+      // username: '',
+      notifications: null
+    }
+  },
+  methods: {
+  },
+  mounted() {
+    console.log(!!localStorage.getItem('access_token'));
+    if (!!localStorage.getItem('access_token')) {
+      console.log("44");
+      axios.interceptors.request.use(
+        config => {
+          config.headers['Authorization'] = `Bearer ${localStorage.getItem('access_token')}`;
+          return config;
+        },
+        error => {
+          return Promise.reject(error);
+        }
+      );
+      // this.username = ;
+    } else {
+      console.log("55", axios.interceptors.request);
+    }
+  }
+
+}
+</script>
