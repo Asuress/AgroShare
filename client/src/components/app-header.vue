@@ -30,7 +30,7 @@
            text="Log out"
            @click="logout"
     ></v-btn>
-    <v-icon v-if="isAuthorized"
+    <v-icon v-if="username !== null && username !== ''"
             right
             icon="mdi-account"
             size="x-large"
