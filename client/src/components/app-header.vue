@@ -1,5 +1,10 @@
 <template>
-  <v-toolbar app :elevation="8" color="teal-darken-2" class="hidden-xs-and-down">
+  <!--  teal-darken-2-->
+  <v-toolbar app
+             :elevation="8"
+
+             color="light-blue-darken-3"
+             class="hidden-xs-and-down">
     <v-icon icon="appIcon"></v-icon>
     <v-toolbar-title
       style="cursor: pointer"
@@ -8,29 +13,30 @@
     </v-toolbar-title>
 
     <v-toolbar-items>
-      <v-btn
-        v-for="item in menuItems"
-        :key="item.icon"
-        :to="item.url"
-        :title="item.title"
-        flat
+      <v-btn v-for="item in menuItems"
+             :key="item.icon"
+             :to="item.url"
+             :title="item.title"
+             flat
       >{{ item.title }}
       </v-btn>
     </v-toolbar-items>
 
     <v-spacer></v-spacer>
 
-    <v-btn v-if="username === '' || username === null"
+    <v-btn v-if="innerUsername === '' || innerUsername === null"
            router to="/login"
+           @click="login"
            text="Login"></v-btn>
-    <v-btn v-if="username === '' || username === null"
+    <v-btn v-if="innerUsername === '' || innerUsername === null"
            router to="/registration"
+           @click="registration"
            text="Registration"></v-btn>
-    <v-btn v-if="username !== null && username !== ''"
+    <v-btn v-if="innerUsername !== null && innerUsername !== ''"
            text="Log out"
            @click="logout"
     ></v-btn>
-    <v-icon v-if="isAuthorized"
+    <v-icon v-if="innerUsername !== null && innerUsername !== ''"
             right
             icon="mdi-account"
             size="x-large"
@@ -45,11 +51,6 @@
 import UserHelper from "@/utils/user-helper";
 
 export default {
-  computed: {
-    isAuthorized() {
-      UserHelper.isAuthorized();
-    }
-  },
   props: {
     username: '',
   },
@@ -72,25 +73,30 @@ export default {
       },
     ],
     isAuthorized: false,
-    username: null
+    innerUsername: null
   }),
   methods: {
+    login() {
+      this.$router.push("/login");
+      console.log("after push to login")
+      this.innerUsername = UserHelper.getUsername();
+    },
+    registration() {
+      this.$router.push("/registration");
+      this.innerUsername = UserHelper.getUsername();
+    },
     logout() {
       UserHelper.unauthorize();
-      this.username = '';
+      this.innerUsername = '';
     },
     profile() {
       this.$router.push("/profile");
     }
   },
   mounted() {
-    this.username = UserHelper.getUsername();
-    console.log("username", this.username);
-  },
-  watch: {
-    username: function (val) {
-      this.isAuthorized = val !== null && val !== '';
-    }
+    this.innerUsername = UserHelper.getUsername();
+    console.log("username", this.innerUsername);
+    console.log("store", this.$store);
   }
 }
 

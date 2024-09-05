@@ -1,8 +1,8 @@
 package org.example.agroshare2.services;
 
 import lombok.RequiredArgsConstructor;
-import org.example.agroshare2.dao.Role;
-import org.example.agroshare2.dao.UserDAO;
+import org.example.agroshare2.entities.Role;
+import org.example.agroshare2.entities.User;
 import org.example.agroshare2.repositories.UserRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,7 +19,7 @@ public class UserService {
      *
      * @return сохраненный пользователь
      */
-    public UserDAO save(UserDAO user) {
+    public User save(User user) {
         return repository.save(user);
     }
 
@@ -29,7 +29,7 @@ public class UserService {
      *
      * @return созданный пользователь
      */
-    public UserDAO create(UserDAO user) {
+    public User create(User user) {
         if (repository.existsByUsername(user.getUsername())) {
             // Заменить на свои исключения
             throw new RuntimeException("Пользователь с таким именем уже существует");
@@ -47,7 +47,7 @@ public class UserService {
      *
      * @return пользователь
      */
-    public UserDAO getByUsername(String username) {
+    public User getByUsername(String username) {
         return repository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
 
@@ -69,7 +69,7 @@ public class UserService {
      *
      * @return текущий пользователь
      */
-    public UserDAO getCurrentUser() {
+    public User getCurrentUser() {
         // Получение имени пользователя из контекста Spring Security
         var username = SecurityContextHolder.getContext().getAuthentication().getName();
         return getByUsername(username);

@@ -1,8 +1,8 @@
 package org.example.agroshare2.services;
 
 import lombok.RequiredArgsConstructor;
-import org.example.agroshare2.dao.Role;
-import org.example.agroshare2.dao.UserDAO;
+import org.example.agroshare2.entities.Role;
+import org.example.agroshare2.entities.User;
 import org.example.agroshare2.dto.JwtAuthenticationResponse;
 import org.example.agroshare2.dto.SignInRequest;
 import org.example.agroshare2.dto.SignUpRequest;
@@ -19,6 +19,15 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
 
+    public String getUsernameFromToken(String token) {
+
+//        JwtAuthenticationToken authenticationToken = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+//        Jwt jwt = (Jwt) authenticationToken.getCredentials();
+//        String email = (String) jwt.getClaims().get("email");
+//        return email;
+        return "";
+    }
+
     /**
      * Регистрация пользователя
      *
@@ -27,10 +36,11 @@ public class AuthenticationService {
      */
     public JwtAuthenticationResponse signUp(SignUpRequest request) {
 
-        var user = UserDAO.builder()
+        var user = User.builder()
                 .username(request.getUsername())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
+                .personType(request.getPersonType())
                 .role(Role.ROLE_USER)
                 .build();
 

@@ -35,6 +35,19 @@
               v-model="user.email"
               :rules="[this.RulesUtils.rules.required, RulesUtils.rules.email]"
             ></v-text-field>
+            <v-radio-group v-model="user.type"
+            >
+              <v-radio id="user-type"
+                       name="user-type"
+                       value="I"
+                       label="Физ. лицо"
+              ></v-radio>
+              <v-radio id="user-type"
+                       name="user-type"
+                       value="L"
+                       label="Юр. лицо"
+              ></v-radio>
+            </v-radio-group>
           </v-form>
         </v-card-text>
         <v-card-actions>
@@ -74,23 +87,21 @@ export default {
       user: {
         username: "",
         password: "",
-        email: ""
-      },
-      rules: {
-        required: value => !!value || 'Required.',
-        email: value => {
-          const pattern =
-            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-          return pattern.test(value) || 'Invalid e-mail.'
-        }
-      },
+        email: "",
+        type: "I"
+      }
     }
   },
   methods: {
     register() {
-      UserHelper.register(this.user.username, this.user.password, this.user.email);
+      console.log("register", this.user)
+      UserHelper.register(this.user.username,
+        this.user.password,
+        this.user.email,
+        this.user.type);
+      // this.$router.go(-1);
     },
-    required (v) {
+    required(v) {
       return !!v || 'Field is required'
     },
   }

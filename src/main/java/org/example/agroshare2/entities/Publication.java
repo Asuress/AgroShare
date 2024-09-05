@@ -1,10 +1,13 @@
 package org.example.agroshare2.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+import org.example.agroshare2.entities.Category;
+
+@Getter
+@Setter
 @Entity
 public class Publication {
     @Id
@@ -12,19 +15,23 @@ public class Publication {
     private Long id;
     private String title;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @Column(name = "user_id")
+    private Long userId;
 
-    public Long getId() {
-        return id;
-    }
+    @Column(name = "price")
+    private String price;
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+    @Column(name = "publications_type")
+    private String publicationType;
 
-    public String getTitle() {
-        return title;
-    }
+    @Column(name = "category")
+//    @OneToOne
+    private Long category;
+
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "image")
+    private byte[] image;
+
 }

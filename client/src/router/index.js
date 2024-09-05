@@ -16,7 +16,7 @@ import News from "@/pages/news/news.vue";
 import Registration from "@/pages/registration.vue";
 import AddPublication from "@/pages/publications/add-publication.vue";
 import Publication from "@/pages/publications/publication.vue";
-import Profile from "@/pages/profile.vue";
+import Profile from "@/pages/user/profile.vue";
 
 
 const routes = [

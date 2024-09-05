@@ -20,7 +20,8 @@
                 <v-autocomplete
                   label="Категория"
                   v-model="publication.selected"
-                  :items="publication.categories"
+                  :items="categories"
+                  item-title=""
                 >
 
                 </v-autocomplete>
@@ -32,6 +33,7 @@
                   label="Цена"
                   type="text"
                   prefix="Р"
+                  v-model="publication.price"
                 ></v-text-field>
               </v-col>
             </v-row>
@@ -42,10 +44,27 @@
                   name="description"
                   label="Описание"
                   type="text"
+                  v-model="publication.description"
                 >
 
                 </v-textarea>
               </v-col>
+            </v-row>
+            <v-row>
+              <v-radio-group inline
+                             v-model="publication.isRent"
+              >
+                <v-radio label="Аренда"
+                         value="true"
+                >
+
+                </v-radio>
+                <v-radio label="Продажа"
+                         value="false"
+                >
+
+                </v-radio>
+              </v-radio-group>
             </v-row>
           </v-form>
         </v-card-text>
@@ -77,9 +96,13 @@ export default {
     return {
       publication: {
         title: '',
-        categories: [],
-        selected: ''
-      }
+        description: '',
+        price: '',
+        selected: '',
+        isRent: true,
+        username: '',
+      },
+      categories: [],
     }
   },
   methods: {
@@ -87,8 +110,17 @@ export default {
       router.go(-1);
     },
     addPublication() {
-      PublicationHelper.addPublication();
+      PublicationHelper.addPublication(this.publication);
     }
+  },
+  created() {
+    PublicationHelper.getCategories((data) => {
+      console.log("data", data);
+      this.categories = data.map(item => {
+        return item.categoryName;
+      });
+    });
+    this.publication.username = localStorage.getItem('username');
   }
 }
 </script>

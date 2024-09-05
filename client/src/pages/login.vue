@@ -61,12 +61,18 @@ export default {
     }
   },
   methods: {
-    login() {
-      UserHelper.authorizeUser(this.user.username, this.user.password);
+    async login() {
+      await UserHelper.authorizeUser(this.user.username, this.user.password);
+      this.user.username = UserHelper.getUsername();
+      console.log("this.user.username", this.user.username);
+      this.$emit('usernameChanged', this.user.username);
+      this.$router.go(-1);
     },
     required(v) {
       return !!v || 'Field is required'
     },
+    changeUsername() {
+    }
   },
   mounted() {
 

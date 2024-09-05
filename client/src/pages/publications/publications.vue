@@ -1,12 +1,20 @@
 <template>
+  <v-treeview :items="categories"
+              item-value="id"
+
+              activatable
+  >
+
+  </v-treeview>
   <v-container flex
                app
   >
 
     <v-layout>
+<!--      #6B6748-->
       <v-card
         class="flex-0-0-100 black--text ml-auto"
-        color="teal-darken-1"
+        color="teal-darken-2"
       >
         <v-row>
           <v-col md="8"
@@ -19,6 +27,7 @@
               bg-color="grey"
               color="grey"
               v-model="searchField"
+              @keydown.enter="search"
             ></v-text-field>
 
           </v-col>
@@ -45,6 +54,15 @@
     </v-layout>
 
     <v-layout>
+      <v-col md="2">
+
+        <v-treeview :items="categories"
+                    item-value="id"
+
+                    activatable
+        >
+        </v-treeview>
+      </v-col>
       <v-row class="list__publications">
         <v-col md="4" v-for="item in publications" :key="item.id">
           <v-card @click="openPublication(item.id)"
@@ -73,7 +91,6 @@
 
 <script>
 import UserHelper from "@/utils/user-helper";
-import router from "@/router";
 import axios from "axios";
 
 export default {
@@ -81,20 +98,31 @@ export default {
   data() {
     return {
       publications: null,
-      searchField: null
+      searchField: null,
+      categories: [
+        {
+          id: 1,
+          title: "Category1",
+          children: [
+            { id: 2, title: 'Calendar : app' },
+            { id: 3, title: 'Chrome : app' },
+            { id: 4, title: 'Webstorm : app' },
+          ],
+        },
+        {
+          id: 2,
+          title: "Category2"
+        }
+      ]
     }
   },
   methods: {
     addPublish() {
       if (UserHelper.isAuthorized()) {
         console.log("Authorized");
-        this.$router.push('/add-publication');
-        // , {
-        //     path: '/add-publication',
-        //       params: {
-        //       id: 0
-        //     }
-        //   }
+        this.$router.push('/add-publication').catch(e => {
+          console.log("error", e);
+        });
       } else {
         this.$router.push("/login")
       }
@@ -134,6 +162,19 @@ export default {
     }).catch(error => {
       console.log("error", error)
     });
+  },
+  created() {
+    // this.categories = [
+    //   {
+    //     id: 1,
+    //     title: "Category1"
+    //   },
+    //   {
+    //     id: 2,
+    //     title: "Category2"
+    //   }
+    // ];
+    console.log("categories", this.categories)
   }
 }
 </script>

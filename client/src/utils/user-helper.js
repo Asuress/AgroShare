@@ -1,4 +1,4 @@
-import router from "@/router";
+// import router from "@/router";
 import axios from "axios";
 
 function setUserData(data, username) {
@@ -32,8 +32,8 @@ export default {
       localStorage.setItem('access_token', "");
     }
   },
-  authorizeUser(username, password) {
-    axios.post("/authenticate/login",
+  async authorizeUser(username, password) {
+    await axios.post("/authenticate/login",
       {
         username: username,
         password: password
@@ -41,8 +41,6 @@ export default {
       console.log("authorizeUser: token", response.data.token)
 
       setUserData(response.data, username);
-
-      router.push("/");
     }).catch(response => {
       console.log("authorizeUser: error")
       console.log(response)
@@ -50,18 +48,20 @@ export default {
     });
     return localStorage.getItem('access_token');
   },
-  register(username, password, email) {
+  register(username, password, email, personType = 'I') {
+    console.log("register userhelper");
     axios.post("/authenticate/register",
       {
         username: username,
         password: password,
-        email: email
+        email: email,
+        personType: personType
       }).then(response => {
+        console.log(response);
       setUserData(response.data, username);
-
-      router.push("/");
     }).catch(response => {
       console.log(response);
     });
+    console.log("afret post");
   }
 }

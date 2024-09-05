@@ -1,4 +1,4 @@
-package org.example.agroshare2.dao;
+package org.example.agroshare2.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -16,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "usr")
-public class UserDAO implements UserDetails {
+public class User implements UserDetails {
 
     @Id
     @Column(name = "id")
@@ -32,6 +32,9 @@ public class UserDAO implements UserDetails {
 
     @Column(name = "email", unique = true, nullable = false)
     private String email;
+
+    @Column(name = "user_type")
+    private String personType;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)

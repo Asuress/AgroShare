@@ -4,7 +4,9 @@
     />
 
 
-    <v-main class="bg-white">
+    <v-main class="bg-grey-lighten-2"
+            @usernameChanged="changeUsername"
+    >
       <router-view />
     </v-main>
 
@@ -24,18 +26,17 @@ export default {
     AppHeader,
     AppFooter
   },
-  computed: {
-    username() {
-      return localStorage.getItem('username');
-    }
-  },
   data() {
     return {
-      // username: '',
+      username: '',
       notifications: null
     }
   },
   methods: {
+    changeUsername(newUsername) {
+      console.log("changeUsername");
+      this.username = newUsername;
+    }
   },
   mounted() {
     console.log(!!localStorage.getItem('access_token'));

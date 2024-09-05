@@ -1,5 +1,5 @@
 <template>
-  <publications/>
+  <publications @usernameChanged="handleUsernameChange"/>
 </template>
 
 <script>
@@ -19,11 +19,38 @@ export default {
   data() {
     return {
       publications: null,
-      searchField: null
+      searchField: null,
+      items: [
+        {
+          id: 1,
+          title: 'Applications :',
+          children: [
+            { id: 2, title: 'Calendar : app' },
+            { id: 3, title: 'Chrome : app' },
+            { id: 4, title: 'Webstorm : app' },
+          ],
+        },
+        {
+          id: 5,
+          title: "Category1",
+          children: [
+            { id: 2, title: 'Calendar : app' },
+            { id: 3, title: 'Chrome : app' },
+            { id: 4, title: 'Webstorm : app' },
+          ],
+        },
+        {
+          id: 2,
+          title: "Category2"
+        }
+      ]
     }
   },
   methods: {
-
+    handleUsernameChange(newUsername) {
+      console.log("handleUsernameChange");
+      this.$emit('usernameChanged', newUsername);
+    }
   },
   mounted() {
     console.log(localStorage.getItem('access_token'));
@@ -33,6 +60,7 @@ export default {
     }).catch(error => {
       console.log("error", error)
     });
+    // console.log()
   }
 }
 </script>

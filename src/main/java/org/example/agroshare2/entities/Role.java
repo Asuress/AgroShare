@@ -1,4 +1,4 @@
-package org.example.agroshare2.dao;
+package org.example.agroshare2.entities;
 
 public enum Role {
     ROLE_USER,

@@ -1,13 +1,12 @@
 package org.example.agroshare2.controllers;
 
+import org.example.agroshare2.dto.PublicationDto;
+import org.example.agroshare2.entities.Category;
 import org.example.agroshare2.entities.Publication;
 import org.example.agroshare2.services.PublicationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,5 +25,15 @@ public class PublicationController {
     @GetMapping("/find")
     public List<Publication> findPublicationByTitle(@RequestParam String title) {
         return publicationService.findByTitle(title);
+    }
+
+    @GetMapping("/categories")
+    public List<Category> getCategories() {
+        return publicationService.getCategories();
+    }
+
+    @PostMapping("/add")
+    public Publication addPublication(@RequestBody PublicationDto publication) {
+        return publicationService.createPublication(publication);
     }
 }
