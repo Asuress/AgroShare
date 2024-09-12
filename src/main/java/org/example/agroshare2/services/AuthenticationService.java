@@ -6,10 +6,14 @@ import org.example.agroshare2.entities.User;
 import org.example.agroshare2.dto.JwtAuthenticationResponse;
 import org.example.agroshare2.dto.SignInRequest;
 import org.example.agroshare2.dto.SignUpRequest;
+import org.example.agroshare2.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +22,9 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+
+    @Autowired
+    private UserRepository userRepository;
 
     public String getUsernameFromToken(String token) {
 
@@ -47,7 +54,10 @@ public class AuthenticationService {
         userService.create(user);
 
         var jwt = jwtService.generateToken(user);
-        return new JwtAuthenticationResponse(jwt);
+
+        Optional<User> usr = userRepository.findByUsername(user.getUsername());
+
+        return new JwtAuthenticationResponse(jwt, usr.orElseThrow().getId());
     }
 
     /**
@@ -67,6 +77,9 @@ public class AuthenticationService {
                 .loadUserByUsername(request.getUsername());
 
         var jwt = jwtService.generateToken(user);
-        return new JwtAuthenticationResponse(jwt);
+
+        Optional<User> usr = userRepository.findByUsername(user.getUsername());
+
+        return new JwtAuthenticationResponse(jwt, usr.orElseThrow().getId());
     }
 }

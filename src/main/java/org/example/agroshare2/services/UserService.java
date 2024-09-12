@@ -87,4 +87,8 @@ public class UserService {
         user.setRole(Role.ROLE_ADMIN);
         save(user);
     }
+
+    public User getUserById(Long id) {
+        return repository.findById(id).orElseThrow();
+    }
 }

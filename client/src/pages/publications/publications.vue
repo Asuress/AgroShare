@@ -1,11 +1,4 @@
 <template>
-  <v-treeview :items="categories"
-              item-value="id"
-
-              activatable
-  >
-
-  </v-treeview>
   <v-container flex
                app
   >
@@ -149,9 +142,13 @@ export default {
       }
     },
     openPublication(id) {
-      console.log(id);
-      id = 1;
-      this.$router.push("/publications/publication/" + id);
+      console.log("publication id", id);
+      this.$router.push(`/publications/publication/${id}`
+      //   {
+      //   name: "publication",
+      //   params: id
+      // }
+      );
     }
   },
   mounted() {

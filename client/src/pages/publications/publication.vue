@@ -11,6 +11,12 @@ export default {
   // props: {
   //   id: null
   // },
+
+  data() {
+    return {
+      id: this.$router.params.id,
+    }
+  },
   created() {
     console.log("router", this.$router);
     console.log("$router.params", this.$router.params);

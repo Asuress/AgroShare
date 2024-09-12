@@ -14,8 +14,7 @@ import App from './App.vue';
 import {createApp} from 'vue'
 import Router from "@/router";
 import Axios from "axios";
-import {store} from "./stores/app"
-import * as colors from "vuetify/util/colors";
+import {store} from "@/stores/store"
 
 Axios.defaults.baseURL = "http://localhost:8080"
 
@@ -41,10 +40,11 @@ const app = createApp(App)
 
 app.config.globalProperties.$router = Router;
 app.config.globalProperties.$username = '';
-app.config.globalProperties.$store = store;
-// app.config.globalProperties.$axios = Axios;
+
+app.use(store);
+app.use(Router);
 
 registerPlugins(app)
-app.component(Router)
+// app.component(Router)
 
 app.mount('#app')

@@ -41,6 +41,10 @@ export default {
   mounted() {
     console.log(!!localStorage.getItem('access_token'));
     if (!!localStorage.getItem('access_token')) {
+      this.$store.commit('setToken', localStorage.getItem('access_token'));
+      this.$store.commit('setUsername', localStorage.getItem('username'));
+      this.$store.commit('setId', localStorage.getItem('id'));
+
       console.log("44");
       axios.interceptors.request.use(
         config => {
@@ -53,6 +57,10 @@ export default {
       );
       // this.username = ;
     } else {
+      this.$store.commit('setToken', null);
+      this.$store.commit('setUsername', null);
+      this.$store.commit('setId', null);
+
       console.log("55", axios.interceptors.request);
     }
   }

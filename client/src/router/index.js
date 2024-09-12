@@ -5,7 +5,7 @@
  */
 
 // Composables
-import { createRouter, createWebHistory } from 'vue-router/auto'
+import { createRouter, createWebHistory } from 'vue-router'
 // import { setupLayouts } from 'virtual:generated-layouts'
 // import { routes } from 'vue-router/auto-routes'
 import Index from '@/pages/index.vue'
@@ -31,9 +31,10 @@ const routes = [
     component: Login
   },
   {
-    path: '/profile',
+    path: '/profile/:id',
     name: 'profile',
-    component: Profile
+    component: Profile,
+    props: true
   },
   {
     path: '/publications',

@@ -24,19 +24,20 @@
 
     <v-spacer></v-spacer>
 
-    <v-btn v-if="innerUsername === '' || innerUsername === null"
+    <v-btn v-if="innerUsername === '' || innerUsername === null || innerUsername === undefined"
            router to="/login"
            @click="login"
            text="Login"></v-btn>
-    <v-btn v-if="innerUsername === '' || innerUsername === null"
+    <v-btn v-if="innerUsername === '' || innerUsername === null || innerUsername === undefined"
            router to="/registration"
            @click="registration"
-           text="Registration"></v-btn>
-    <v-btn v-if="innerUsername !== null && innerUsername !== ''"
+           text="Registration"
+    ></v-btn>
+    <v-btn v-if="innerUsername !== '' && innerUsername !== null && innerUsername !== undefined"
            text="Log out"
            @click="logout"
     ></v-btn>
-    <v-icon v-if="innerUsername !== null && innerUsername !== ''"
+    <v-icon v-if="innerUsername !== '' && innerUsername !== null && innerUsername !== undefined"
             right
             icon="mdi-account"
             size="x-large"
@@ -51,9 +52,29 @@
 import UserHelper from "@/utils/user-helper";
 
 export default {
-  props: {
-    username: '',
+  computed: {
+    innerUsername() {
+      console.log(this.$store.getters.username !== '' && this.$store.getters.username !== null && this.$store.getters.username !== undefined)
+      console.log('computed username in app-header', this.$store.getters.username);
+      return this.$store.getters.username;
+    },
+    isAuthorized() {
+      let username = this.$store.state.username;
+      console.log('computed isAuthorized in app-header', username !== null && username !== '' && username !== undefined);
+      return this.$store.state.username !== null && this.$store.state.username !== '' && this.$store.state.username !== undefined;
+    }
   },
+  watch: {
+    innerUsername(newUsername, oldUsername) {
+      console.log(`We have ${newUsername} fruits now, yay!`)
+    },
+    isAuthorized(newValue, oldValue) {
+      console.log(`is authorized: ${newValue}`);
+    },
+  },
+  mixins: [
+    UserHelper
+  ],
   data: () => ({
     menuItems: [
       {
@@ -72,31 +93,31 @@ export default {
         icon: "newsIcon"
       },
     ],
-    isAuthorized: false,
-    innerUsername: null
+    // isAuthorized: false,
+    // innerUsername: null
   }),
   methods: {
     login() {
+      console.log("before push to login")
       this.$router.push("/login");
-      console.log("after push to login")
-      this.innerUsername = UserHelper.getUsername();
+      // this.innerUsername = UserHelper.getUsername();
     },
     registration() {
       this.$router.push("/registration");
-      this.innerUsername = UserHelper.getUsername();
+      // this.innerUsername = UserHelper.getUsername();
     },
     logout() {
       UserHelper.unauthorize();
-      this.innerUsername = '';
+      // this.innerUsername = '';
     },
     profile() {
-      this.$router.push("/profile");
+      console.log("id:", this.$store.getters.id);
+      this.$router.push(`/profile/${this.$store.getters.id}`);
     }
   },
   mounted() {
-    this.innerUsername = UserHelper.getUsername();
-    console.log("username", this.innerUsername);
-    console.log("store", this.$store);
+    console.log("mounted");
+    // this.innerUsername = UserHelper.getUsername();
   }
 }
 

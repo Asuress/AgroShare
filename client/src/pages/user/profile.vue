@@ -121,24 +121,22 @@
 </template>
 
 <script>
+import UserHelper from "@/utils/user-helper";
+
 export default {
   name: "Profile",
   data() {
     return {
       user: {
+        id: this.$router.params.id,
         avatar: 'https://www.example.com/avatar.jpg', // URL текущего аватара
         name: 'Иван Иванов',
         email: 'ivan.ivanov@example.com',
         bio: 'Веб-разработчик с 5-летним опытом работы в области веб-разработки.',
         activeAnnouncementsCount: 5,
         profileViews: 123,
-        announcements: [
-          { id: 1, title: 'Первое объявление', description: 'Это первое объявление.' },
-          { id: 2, title: 'Второе объявление', description: 'Это второе объявление.' },
-        ],
-        drafts: [
-          { id: 3, title: 'Черновое объявление', description: 'Это черновое объявление.' },
-        ],
+        announcements: [],
+        drafts: [],
       },
       avatarPreview: '', // Для предварительного просмотра аватара
       profileDialog: false,
@@ -199,6 +197,17 @@ export default {
       }
     },
   },
+  created() {
+    // console.log("params", this.$router.params.id);
+    // this.user.id = this.$router.params.id;
+    // if (Number.isInteger(this.$router.params)) {
+    //   UserHelper.getUser(this.user.id).then(response => {
+    //     console.log(response);
+    //   })
+    // } else {
+    //   this.$router.go(-1);
+    // }
+  }
 };
 </script>
 
