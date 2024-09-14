@@ -21,5 +21,11 @@ export default {
       console.log(response.data);
       callback(response.data);
     })
+  },
+  getPublicationsByUserId(id) {
+    return axios.get(`/publications/find/user/${id}`);
+  },
+  getPublicationInfoById(id) {
+    return axios.get(`/publications/get/${id}`)
   }
 }

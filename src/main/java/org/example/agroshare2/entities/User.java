@@ -36,9 +36,24 @@ public class User implements UserDetails {
     @Column(name = "user_type")
     private String personType;
 
+    @Column(name = "typed_user_id")
+    private Long typedUserId;
+
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
+    @Column(name = "location")
+    private String location;
+
+    @Column(name = "inn")
+    private String inn;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     private Role role;
+
+//    @Column(name = "first_name", nullable = false)
+//    private String firstName;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

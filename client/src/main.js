@@ -40,6 +40,14 @@ const app = createApp(App)
 
 app.config.globalProperties.$router = Router;
 app.config.globalProperties.$username = '';
+app.config.errorHandler = (err, vm, info) => {
+  console.error('Error caught in global handler:', err);
+  console.error('Component:', vm);
+  console.error('Info:', info);
+
+  // Вы можете выводить сообщение или показывать его пользователю
+  alert('Произошла ошибка: ' + err.message);
+};
 
 app.use(store);
 app.use(Router);

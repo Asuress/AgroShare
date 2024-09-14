@@ -14,4 +14,6 @@ public interface PublicationRepository extends JpaRepository<Publication, Long> 
 
     @Query(value = "SELECT * FROM public.publication p ORDER BY id DESC LIMIT 10", nativeQuery = true)
     public List<Publication> findLast10();
+
+    List<Publication> findByUserId(Long id);
 }

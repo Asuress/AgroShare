@@ -18,28 +18,29 @@
             Категория: {{ ad.category }}
           </v-card-subtitle>
           <p class="location">
-            <v-icon left>mdi-map-marker</v-icon> {{ ad.location }}
+            <v-icon left>mdi-map-marker</v-icon>
+            {{ ad.location }}
           </p>
           <v-divider></v-divider>
 
           <v-card-text>
-            <p class="price">{{ formatPrice(ad.price) }} руб.</p>
+            <p class="price" v-if="!!ad.price">{{ formatPrice(ad.price) }} руб.</p>
             <p>{{ ad.description }}</p>
             <v-divider></v-divider>
-            <p class="meta-info">Дата публикации: {{ ad.date }}</p>
-            <p class="meta-info">Просмотры: {{ ad.views }}</p>
+<!--            <p class="meta-info">Дата публикации: {{ ad.date }}</p>-->
+<!--            <p class="meta-info">Просмотры: {{ ad.views }}</p>-->
           </v-card-text>
 
           <!-- Кнопки действий -->
           <v-card-actions>
-            <v-btn color="primary" @click="viewDetails">Подробнее</v-btn>
+            <v-btn color="primary" disabled @click="viewDetails">Подробнее</v-btn>
             <v-btn color="secondary" @click="showContact">Показать телефон</v-btn>
           </v-card-actions>
 
           <!-- Информация о продавце -->
           <v-divider></v-divider>
           <v-card-subtitle class="seller-info">
-            Продавец: {{ ad.seller.name }}
+            Продавец: {{ ad.email }}
           </v-card-subtitle>
           <v-btn color="secondary" @click="viewSellerAds">Все объявления продавца</v-btn>
         </v-col>
@@ -58,71 +59,33 @@
         </v-card>
       </v-dialog>
     </v-card>
-
-    <!-- Блок с похожими объявлениями -->
-    <v-card class="similar-ads" flat>
-      <v-card-title>Похожие объявления</v-card-title>
-      <v-row>
-        <v-col v-for="(similarAd, index) in similarAds" :key="index" cols="4">
-          <v-card class="similar-ad-card" outlined>
-            <v-img :src="similarAd.image" alt="Image of similar ad" height="150" contain></v-img>
-            <v-card-title class="headline">{{ similarAd.title }}</v-card-title>
-            <v-card-subtitle class="price">{{ formatPrice(similarAd.price) }} руб.</v-card-subtitle>
-            <v-btn color="primary" small @click="viewSimilarAd(similarAd.id)">
-              Смотреть
-            </v-btn>
-          </v-card>
-        </v-col>
-      </v-row>
-    </v-card>
   </v-container>
 </template>
 
 <script>
+import UserHelper from "@/utils/user-helper";
+import PublicationHelper from "@/utils/publications/publication-helper";
+import {th} from "vuetify/locale";
+
 export default {
-  props: {
-    ad: {
-      type: Object,
-      required: true,
-      default: () => ({
-        title: "Пример объявления",
-        category: "Электроника",
-        location: "Москва",
-        image: "https://via.placeholder.com/300",
-        description: "Пример описания товара.",
-        price: 10000,
-        contact: { phone: "8 (999) 123-45-67" },
-        seller: { name: "Иван Иванов" },
-        date: "01.09.2024",
-        views: 123,
-        id: 1,
-      }),
-    },
-  },
+  props: {},
   data() {
     return {
       isFavorite: false,
       contactDialog: false,
-      similarAds: [
-        {
-          id: 2,
-          title: "Похожее объявление 1",
-          price: 9500,
-          image: "https://via.placeholder.com/150",
-        },
-        {
-          id: 3,
-          title: "Похожее объявление 2",
-          price: 12000,
-          image: "https://via.placeholder.com/150",
-        },
-        {
-          id: 4,
-          title: "Похожее объявление 3",
-          price: 8000,
-          image: "https://via.placeholder.com/150",
-        },
-      ],
+      ad: {
+        title: null,
+        category: null,
+        location: null,
+        image: null,
+        description: null,
+        price: null,
+        contact: {phone: "8 (999) 123-45-67"},
+        seller: null,
+        date: null,
+        views: null,
+        id: this.$route.params.id,
+      },
     };
   },
   methods: {
@@ -130,21 +93,38 @@ export default {
       return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
     },
     viewDetails() {
-      this.$router.push({ name: 'adDetails', params: { id: this.ad.id } });
+      this.$router.push({name: 'adDetails', params: {id: this.ad.id}});
     },
     showContact() {
       this.contactDialog = true;
     },
     viewSellerAds() {
-      this.$router.push({ name: 'sellerAds', params: { seller: this.ad.seller.name } });
+      this.$router.push(`/publications/user/${id}`);
     },
     toggleFavorite() {
       this.isFavorite = !this.isFavorite;
     },
     viewSimilarAd(id) {
-      this.$router.push({ name: 'adDetails', params: { id } });
+      this.$router.push({name: 'adDetails', params: {id}});
+    },
+    async fetchData() {
+      this.loading = true; // Устанавливаем флаг загрузки
+      try {
+        console.log("params.id", this.$route.params.id);
+        await PublicationHelper.getPublicationInfoById(this.$route.params.id).then(response => {
+          console.log("publication data", response.data);
+          this.ad = response.data;
+        });
+      } catch (error) {
+        console.error('Ошибка при загрузке данных:', error);
+      } finally {
+        this.loading = false; // Сбрасываем флаг загрузки
+      }
     },
   },
+  created() {
+    this.fetchData();
+  }
 };
 </script>
 

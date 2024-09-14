@@ -1,5 +1,6 @@
 package org.example.agroshare2.controllers;
 
+import org.example.agroshare2.dto.PersonDto;
 import org.example.agroshare2.entities.User;
 import org.example.agroshare2.services.UserService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +18,7 @@ public class UserController {
     }
 
     @GetMapping("/get/{id}")
-    public User get(@PathVariable Long id) {
+    public PersonDto get(@PathVariable Long id) {
         return userService.getUserById(id);
     }
 }

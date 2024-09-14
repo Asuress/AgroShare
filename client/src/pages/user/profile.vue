@@ -1,5 +1,10 @@
 <template>
   <v-container>
+    <v-progress-circular
+      v-if="loading"
+      indeterminate
+      color="primary"
+    ></v-progress-circular>
     <v-row>
       <v-col cols="12" md="4">
         <v-card class="elevation-1 rounded-lg px-4 py-6 text-center">
@@ -9,7 +14,7 @@
 
           <!-- Кнопка для выбора нового изображения -->
           <v-btn color="primary" class="mb-2" block rounded @click="triggerAvatarUpload">Изменить аватар</v-btn>
-          <input type="file" ref="avatarInput" @change="onAvatarChange" accept="image/*" style="display: none;" />
+          <input type="file" ref="avatarInput" @change="onAvatarChange" accept="image/*" style="display: none;"/>
 
           <h2 class="mb-2 font-weight-medium text-dark">{{ user.name }}</h2>
           <p class="text-muted">{{ user.email }}</p>
@@ -18,68 +23,28 @@
           <v-btn color="primary" class="mb-2" block rounded @click="editProfile">Редактировать профиль</v-btn>
           <v-btn color="secondary" block rounded @click="changePassword">Сменить пароль</v-btn>
         </v-card>
-
-        <v-card class="elevation-1 mt-4 rounded-lg px-4 py-3">
-          <v-card-title class="text-h6 text-dark">Статистика</v-card-title>
-          <v-divider class="my-2"></v-divider>
-          <v-list dense>
-            <v-list-item>
-              <v-list-item-content>
-                <v-list-item-title class="text-dark">Активные объявления</v-list-item-title>
-                <v-list-item-subtitle>{{ user.activeAnnouncementsCount }}</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-            <v-list-item>
-              <v-list-item-content>
-                <v-list-item-title class="text-dark">Просмотры профиля</v-list-item-title>
-                <v-list-item-subtitle>{{ user.profileViews }}</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list>
-        </v-card>
       </v-col>
 
       <v-col cols="12" md="8">
         <v-card class="elevation-1 rounded-lg px-4 py-4">
           <v-card-title class="text-h6 text-dark">Мои объявления</v-card-title>
           <v-divider class="my-2"></v-divider>
-          <v-list dense>
-            <v-list-item-group>
-              <v-list-item
-                v-for="announcement in user.announcements"
-                :key="announcement.id"
-                class="announcement-item"
-              >
-                <v-list-item-content>
-                  <v-list-item-title class="font-weight-medium text-dark">{{ announcement.title }}</v-list-item-title>
-                  <v-list-item-subtitle class="text-muted">{{ announcement.description }}</v-list-item-subtitle>
-                </v-list-item-content>
-                <v-list-item-action>
-                  <v-btn color="primary" small rounded @click="viewAnnouncement(announcement.id)">Просмотреть</v-btn>
-                </v-list-item-action>
-              </v-list-item>
-            </v-list-item-group>
-          </v-list>
-        </v-card>
-
-        <v-card class="elevation-1 mt-4 rounded-lg px-4 py-4">
-          <v-card-title class="text-h6 text-dark">Черновики объявлений</v-card-title>
-          <v-divider class="my-2"></v-divider>
-          <v-list dense>
+          <v-list dense v-if="!!user.announcements">
             <v-list-item
-              v-for="draft in user.drafts"
-              :key="draft.id"
-              class="announcement-item"
+              v-for="announcement in user.announcements"
+              :key="announcement.id"
             >
               <v-list-item-content>
-                <v-list-item-title class="font-weight-medium text-dark">{{ draft.title }}</v-list-item-title>
-                <v-list-item-subtitle class="text-muted">{{ draft.description }}</v-list-item-subtitle>
+                <v-list-item-title>{{ announcement.title }}</v-list-item-title>
+                <v-list-item-subtitle>{{ announcement.description }}</v-list-item-subtitle>
               </v-list-item-content>
               <v-list-item-action>
-                <v-btn color="primary" small rounded @click="editDraft(draft.id)">Редактировать</v-btn>
+                <v-btn color="primary" small @click="viewAnnouncement(announcement.id)">Просмотреть</v-btn>
               </v-list-item-action>
             </v-list-item>
           </v-list>
+          <p v-else>Нет доступных публикаций</p>
+
         </v-card>
       </v-col>
     </v-row>
@@ -89,9 +54,9 @@
       <v-card>
         <v-card-title class="headline">Редактирование профиля</v-card-title>
         <v-card-text>
-          <v-text-field label="Имя" v-model="user.name"></v-text-field>
-          <v-text-field label="Email" v-model="user.email"></v-text-field>
-          <v-textarea label="Биография" v-model="user.bio"></v-textarea>
+          <v-text-field label="Имя" v-model="userEdit.name"></v-text-field>
+          <v-text-field label="Email" v-model="userEdit.email"></v-text-field>
+          <!--          <v-textarea label="Биография" v-model="user.bio"></v-textarea>-->
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -122,21 +87,30 @@
 
 <script>
 import UserHelper from "@/utils/user-helper";
+import PublicationHelper from "@/utils/publications/publication-helper";
 
 export default {
   name: "Profile",
   data() {
     return {
+      loading: false,
+      userId: this.$route.params.id,
       user: {
-        id: this.$router.params.id,
-        avatar: 'https://www.example.com/avatar.jpg', // URL текущего аватара
-        name: 'Иван Иванов',
-        email: 'ivan.ivanov@example.com',
-        bio: 'Веб-разработчик с 5-летним опытом работы в области веб-разработки.',
-        activeAnnouncementsCount: 5,
-        profileViews: 123,
+        id: this.$route.params.id,
+        avatar: null, // URL текущего аватара
+        name: null,
+        email: null,
+        bio: null,
         announcements: [],
         drafts: [],
+      },
+      announcements: [],
+      userEdit: {
+        id: this.$route.params.id,
+        avatar: null,
+        name: null,
+        email: null,
+        bio: null,
       },
       avatarPreview: '', // Для предварительного просмотра аватара
       profileDialog: false,
@@ -153,7 +127,7 @@ export default {
     },
     // Открыть диалог смены пароля
     changePassword() {
-      this.passwordDialog = true;
+
     },
     // Логика сохранения профиля
     saveProfile() {
@@ -173,8 +147,7 @@ export default {
     },
     // Логика просмотра объявления
     viewAnnouncement(id) {
-      alert(`Просмотр объявления с ID: ${id}`);
-      // Здесь может быть переход на страницу с объявлением
+      this.$router.push(`/publications/publication/${id}`);
     },
     // Логика редактирования черновика
     editDraft(id) {
@@ -196,17 +169,38 @@ export default {
         reader.readAsDataURL(file);
       }
     },
+    async fetchData() {
+      this.loading = true; // Устанавливаем флаг загрузки
+      try {
+        console.log("params.id", this.$route.params.id);
+        console.log("is integer", !!this.$route.params.id);
+        this.user.id = this.$route.params.id;
+        if (!!this.user.id) {
+          UserHelper.getUser(this.user.id).then(response => {
+            console.log(response.data);
+            this.user = JSON.parse(JSON.stringify(response.data));
+            this.userEdit = this.user;
+            console.log("user 196", this.user);
+            PublicationHelper.getPublicationsByUserId(this.$route.params.id).then(response => {
+              this.user.announcements = response.data;
+              this.announcements = response.data;
+              console.log("publications", this.user.announcements);
+              console.log("publications2", this.announcements);
+              console.log("user publ", this.user);
+            });
+          });
+        } else {
+          this.$router.go(-1);
+        }
+      } catch (error) {
+        console.error('Ошибка при загрузке данных:', error);
+      } finally {
+        this.loading = false; // Сбрасываем флаг загрузки
+      }
+    },
   },
   created() {
-    // console.log("params", this.$router.params.id);
-    // this.user.id = this.$router.params.id;
-    // if (Number.isInteger(this.$router.params)) {
-    //   UserHelper.getUser(this.user.id).then(response => {
-    //     console.log(response);
-    //   })
-    // } else {
-    //   this.$router.go(-1);
-    // }
+    this.fetchData();
   }
 };
 </script>

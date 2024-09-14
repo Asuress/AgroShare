@@ -1,29 +1,40 @@
 import axios from "axios";
 import {store} from "@/stores/store";
+import {includes} from "core-js/internals/array-includes";
 
-function setUserData(token, username, id) {
-  console.log("setUserData begin", username, token)
-  localStorage.setItem('username', username);
-  localStorage.setItem('access_token', token);
-  localStorage.setItem('id', id);
-
-  store.commit('setUsername', username);
-  store.commit('setToken', token);
-  store.commit('setId', id);
-
-  axios.interceptors.request.use(
-    config => {
-      config.headers['Authorization'] = `Bearer ${localStorage.getItem('access_token')}`;
-      return config;
-    },
-    error => {
-      console.log("setUserData error")
-      return Promise.reject(error);
-    }
-  );
-}
-
+// function
 export default {
+  setUserData(token, username, id) {
+    console.log("setUserData begin", username, token)
+    localStorage.setItem('username', username);
+    localStorage.setItem('access_token', token);
+    localStorage.setItem('id', id);
+
+    store.commit('setUsername', username);
+    store.commit('setToken', token);
+    store.commit('setId', id);
+
+    console.log("setUserData before use", username, token)
+    axios.interceptors.request.use(
+      config => {
+        console.log("axios use", username, token)
+        // Если токен существует, добавляем заголовок Authorization
+        if (token) {
+          config.headers['Authorization'] = `Bearer ${token}`;
+        } else {
+          // Удаляем заголовок Authorization, если токена нет
+          delete config.headers['Authorization'];
+        }
+
+        return config;
+      },
+      error => {
+        console.log("setUserData error");
+        return Promise.reject(error);
+      }
+    );
+    console.log("setUserData after use", username, token)
+  },
   isAuthorized() {
     console.log("isAuthorized");
     return store.getters.username !== null
@@ -34,9 +45,17 @@ export default {
     return store.getters.username;
   },
   unauthorize() {
+    axios.interceptors.request.use(
+      config => {
+        config.headers['Authorization'] = `Bearer`;
+        return config;
+      },
+      error => {
+        console.log("setUserData error")
+        return Promise.reject(error);
+      })
     if (this.isAuthorized()) {
-      store.commit('setUsername', '');
-      store.commit('setToken', '');
+      this.setUserData(null, null, null)
     }
   },
   async authorizeUser(username, password) {
@@ -48,7 +67,7 @@ export default {
       console.log("authorizeUser: token", response.data.token)
       console.log("authorizeUser: id", response.data.id)
 
-      setUserData(response.data.token, username, response.data.id);
+      this.setUserData(response.data.token, username, response.data.id);
     }).catch(response => {
       console.log("authorizeUser: error")
       console.log(response)
@@ -68,7 +87,7 @@ export default {
       console.log(response);
       console.log("register: id", response.data.id)
 
-      setUserData(response.data.token, username, response.data.id);
+      this.setUserData(response.data.token, username, response.data.id);
     }).catch(response => {
       console.log(response);
     });

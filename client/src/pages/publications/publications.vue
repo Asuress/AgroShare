@@ -143,12 +143,7 @@ export default {
     },
     openPublication(id) {
       console.log("publication id", id);
-      this.$router.push(`/publications/publication/${id}`
-      //   {
-      //   name: "publication",
-      //   params: id
-      // }
-      );
+      this.$router.push(`/publications/publication/${id}`);
     }
   },
   mounted() {
