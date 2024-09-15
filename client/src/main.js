@@ -16,7 +16,7 @@ import Router from "@/router";
 import Axios from "axios";
 import {store} from "@/stores/store"
 
-Axios.defaults.baseURL = "http://80.242.58.150:8080/api/"
+Axios.defaults.baseURL = "http://80.242.58.150:8001/api/"
 
 const app = createApp(App)
 
