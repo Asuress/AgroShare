@@ -5,7 +5,12 @@
       <v-row>
         <!-- Изображение товара -->
         <v-col cols="5">
-          <v-img :src="ad.image" alt="Image of ad" height="400" contain></v-img>
+          <v-img :src="ad.image"
+                 alt="Image of ad"
+                 aspect-ratio="1"
+                 height="400"
+                 cover
+                 contain></v-img>
           <v-btn icon color="red" @click="toggleFavorite">
             <v-icon>{{ isFavorite ? 'mdi-heart' : 'mdi-heart-outline' }}</v-icon>
           </v-btn>
@@ -13,7 +18,7 @@
 
         <!-- Описание товара -->
         <v-col cols="7">
-          <v-card-title class="headline">{{ ad.title }}</v-card-title>
+          <v-card-title class="headline" wrap>{{ ad.title }}</v-card-title>
           <v-card-subtitle class="category">
             Категория: {{ ad.category }}
           </v-card-subtitle>
@@ -27,14 +32,14 @@
             <p class="price" v-if="!!ad.price">{{ formatPrice(ad.price) }} руб.</p>
             <p>{{ ad.description }}</p>
             <v-divider></v-divider>
-<!--            <p class="meta-info">Дата публикации: {{ ad.date }}</p>-->
-<!--            <p class="meta-info">Просмотры: {{ ad.views }}</p>-->
+            <!--            <p class="meta-info">Дата публикации: {{ ad.date }}</p>-->
+            <!--            <p class="meta-info">Просмотры: {{ ad.views }}</p>-->
           </v-card-text>
 
           <!-- Кнопки действий -->
           <v-card-actions>
-            <v-btn color="primary" disabled @click="viewDetails">Подробнее</v-btn>
-            <v-btn color="secondary" @click="showContact">Показать телефон</v-btn>
+            <v-btn class="my-custom-background-button" disabled @click="viewDetails">Подробнее</v-btn>
+            <v-btn class="my-custom-background-button-primary" @click="showContact">Показать телефон</v-btn>
           </v-card-actions>
 
           <!-- Информация о продавце -->
@@ -42,7 +47,11 @@
           <v-card-subtitle class="seller-info">
             Продавец: {{ ad.email }}
           </v-card-subtitle>
-          <v-btn color="secondary" @click="viewSellerAds">Все объявления продавца</v-btn>
+          <v-btn class="my-custom-background-button" @click="viewSellerAds">Все объявления продавца</v-btn>
+        </v-col>
+        <v-col>
+          <app-calendar v-if="ad.publicationType === 'R'">
+          </app-calendar>
         </v-col>
       </v-row>
 
@@ -54,7 +63,7 @@
             <p><strong>Телефон:</strong> {{ ad.contact.phone }}</p>
           </v-card-text>
           <v-card-actions>
-            <v-btn color="primary" @click="contactDialog = false">Закрыть</v-btn>
+            <v-btn class="my-custom-background-button" @click="contactDialog = false">Закрыть</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -66,8 +75,10 @@
 import UserHelper from "@/utils/user-helper";
 import PublicationHelper from "@/utils/publications/publication-helper";
 import {th} from "vuetify/locale";
+import AppCalendar from "@/components/app-calendar.vue";
 
 export default {
+  components: {AppCalendar},
   props: {},
   data() {
     return {
@@ -183,4 +194,5 @@ v-btn {
 .similar-ad-card v-btn {
   margin-top: 10px;
 }
+
 </style>

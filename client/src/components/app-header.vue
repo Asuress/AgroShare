@@ -2,9 +2,7 @@
   <!--  teal-darken-2-->
   <v-toolbar app
              :elevation="8"
-
-             color="light-blue-darken-3"
-             class="hidden-xs-and-down">
+             class="hidden-xs-and-down my-custom-background-header">
     <v-icon icon="appIcon"></v-icon>
     <v-toolbar-title
       style="cursor: pointer"
@@ -123,6 +121,8 @@ export default {
 
 </script>
 
-<style scoped lang="sass">
-
+<style scoped>
+.my-custom-background-header {
+  background-color: #7B382E; /* ваш кастомный цвет */
+}
 </style>

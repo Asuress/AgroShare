@@ -13,15 +13,15 @@
           </v-avatar>
 
           <!-- Кнопка для выбора нового изображения -->
-          <v-btn color="primary" class="mb-2" block rounded @click="triggerAvatarUpload">Изменить аватар</v-btn>
+          <v-btn class="my-custom-background-button mb-2" block rounded @click="triggerAvatarUpload">Изменить аватар</v-btn>
           <input type="file" ref="avatarInput" @change="onAvatarChange" accept="image/*" style="display: none;"/>
 
           <h2 class="mb-2 font-weight-medium text-dark">{{ user.name }}</h2>
           <p class="text-muted">{{ user.email }}</p>
           <p class="text-muted mb-4">{{ user.bio }}</p>
 
-          <v-btn color="primary" class="mb-2" block rounded @click="editProfile">Редактировать профиль</v-btn>
-          <v-btn color="secondary" block rounded @click="changePassword">Сменить пароль</v-btn>
+          <v-btn class="my-custom-background-button mb-2" block rounded @click="editProfile">Редактировать профиль</v-btn>
+          <v-btn class="my-custom-background-button" block rounded @click="changePassword">Сменить пароль</v-btn>
         </v-card>
       </v-col>
 
@@ -39,7 +39,7 @@
                 <v-list-item-subtitle>{{ announcement.description }}</v-list-item-subtitle>
               </v-list-item-content>
               <v-list-item-action>
-                <v-btn color="primary" small @click="viewAnnouncement(announcement.id)">Просмотреть</v-btn>
+                <v-btn class="my-custom-background-button" small @click="viewAnnouncement(announcement.id)">Просмотреть</v-btn>
               </v-list-item-action>
             </v-list-item>
           </v-list>
@@ -60,8 +60,8 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="profileDialog = false">Отмена</v-btn>
-          <v-btn color="blue darken-1" text @click="saveProfile">Сохранить</v-btn>
+          <v-btn class="my-custom-background-button" text @click="profileDialog = false">Отмена</v-btn>
+          <v-btn class="my-custom-background-button" text @click="saveProfile">Сохранить</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -77,8 +77,8 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="passwordDialog = false">Отмена</v-btn>
-          <v-btn color="blue darken-1" text @click="savePassword">Сохранить</v-btn>
+          <v-btn class="my-custom-background-button" text @click="passwordDialog = false">Отмена</v-btn>
+          <v-btn class="my-custom-background-button" text @click="savePassword">Сохранить</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

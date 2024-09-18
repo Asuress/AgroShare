@@ -4,7 +4,7 @@
     />
 
 
-    <v-main class="bg-grey-lighten-2"
+    <v-main class="my-custom-background"
             @usernameChanged="changeUsername"
     >
       <router-view />
@@ -70,3 +70,19 @@ export default {
 
 }
 </script>
+
+<style>
+.my-custom-background {
+  background-color: #D8DCDF; /* ваш кастомный цвет */
+}
+.my-custom-background-button-primary {
+  background-color: #2E7D32;
+}
+.my-custom-background-button {
+  background-color: #2E7D32;
+  color: whitesmoke;
+}
+v-btn {
+  background-color: #ffff00;
+}
+</style>

@@ -2,17 +2,17 @@
   <v-container flex app>
     <v-layout>
       <v-card justify-center
-              class="elevation-12 flex-0-0-100 black--text"
+              class="elevation-12 flex-0-0-100 black--text my-custom-background"
               color="grey-lighten-3">
-        <v-toolbar dark color="teal-darken-2">
-          <v-toolbar-title>Login form</v-toolbar-title>
+        <v-toolbar class="my-custom-background-button-primary">
+          <v-toolbar-title>Форма авторизации</v-toolbar-title>
         </v-toolbar>
         <v-card-text>
           <v-form>
             <v-text-field
               prepend-icon="person"
               name="login"
-              label="Login"
+              label="Имя пользователя"
               type="text"
               v-model="user.username"
               :rules="[required]"
@@ -21,7 +21,7 @@
               id="password"
               prepend-icon="lock"
               name="password"
-              label="Password"
+              label="Пароль"
               type="password"
               v-model="user.password"
               :rules="[required]"
@@ -30,7 +30,7 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary"
+          <v-btn class="my-custom-background-button"
                  @click="login"
           >
             Login
@@ -80,4 +80,6 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+
+</style>
