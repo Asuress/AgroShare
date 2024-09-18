@@ -3,12 +3,33 @@
   <v-toolbar app
              :elevation="8"
              class="hidden-xs-and-down my-custom-background-header">
-    <v-icon icon="appIcon"></v-icon>
-    <v-toolbar-title
-      style="cursor: pointer"
-      @click="$router.push('/')">
-      АгроShare
-    </v-toolbar-title>
+    <!-- Изображение слева -->
+    <v-row class="d-flex align-start">
+      <v-col class="d-flex align-start">
+        <v-img
+          src="@/assets/AgroShareLogo.png"
+          class="logo"
+          contain
+          height="90"
+          @click="$router.push('/')"
+          style="cursor: pointer; margin-left: 16px;"
+        ></v-img>
+      </v-col>
+    </v-row>
+    <!-- Контейнер для изображения и заголовка -->
+<!--    <v-toolbar-title class="d-flex"-->
+<!--                     @click="$router.push('/')"-->
+<!--                     style="cursor: pointer; margin-left: 16px;"-->
+<!--    >-->
+
+
+<!--      &lt;!&ndash; Заголовок &ndash;&gt;-->
+<!--      &lt;!&ndash;      <span&ndash;&gt;-->
+<!--      &lt;!&ndash;        class="toolbar-title"&ndash;&gt;-->
+<!--      &lt;!&ndash;      >&ndash;&gt;-->
+<!--      &lt;!&ndash;        АгроShare&ndash;&gt;-->
+<!--      &lt;!&ndash;        </span>&ndash;&gt;-->
+<!--    </v-toolbar-title>-->
 
     <v-toolbar-items>
       <v-btn v-for="item in menuItems"
@@ -120,9 +141,19 @@ export default {
 }
 
 </script>
-
+<!--background-color: #7B382E;-->
 <style scoped>
 .my-custom-background-header {
-  background-color: #7B382E; /* ваш кастомный цвет */
+  /* ваш кастомный цвет */
+  background-color: #43A047;
+}
+
+.logo {
+  height: 40px; /* Установите нужную высоту для изображения */
+  margin-right: 16px; /* Отступ справа от изображения */
+}
+
+.toolbar-title {
+  line-height: 40px; /* Выравнивание текста по вертикали с изображением */
 }
 </style>
