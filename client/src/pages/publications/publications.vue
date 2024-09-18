@@ -1,11 +1,4 @@
 <template>
-  <v-treeview :items="categories"
-              item-value="id"
-
-              activatable
-  >
-
-  </v-treeview>
   <v-container flex
                app
   >
@@ -13,8 +6,7 @@
     <v-layout>
 <!--      #6B6748-->
       <v-card
-        class="flex-0-0-100 black--text ml-auto"
-        color="teal-darken-2"
+        class="flex-0-0-100 black--text ml-auto my-custom-background"
       >
         <v-row>
           <v-col md="8"
@@ -66,6 +58,7 @@
       <v-row class="list__publications">
         <v-col md="4" v-for="item in publications" :key="item.id">
           <v-card @click="openPublication(item.id)"
+                  max-height="500"
           >
 
             <v-img
@@ -73,7 +66,7 @@
               :src="item.img"
             ></v-img> <!-- С помощью v-img добавляем изображение карточки -->
 
-            <v-card-title> <!-- Заголовок заведения -->
+            <v-card-title class="text-wrap"> <!-- Заголовок заведения -->
               <h3 class="text-h4">{{ item.title }}</h3>
             </v-card-title>
 
@@ -149,9 +142,13 @@ export default {
       }
     },
     openPublication(id) {
-      console.log(id);
-      id = 1;
-      this.$router.push("/publications/publication/" + id);
+      console.log("publication id", id);
+      console.log("isAuthorized:", UserHelper.isAuthorized());
+      if (UserHelper.isAuthorized()) {
+        this.$router.push(`/publications/publication/${id}`);
+      } else {
+        this.$router.push(`/registration`);
+      }
     }
   },
   mounted() {
@@ -179,6 +176,8 @@ export default {
 }
 </script>
 
-<style scoped lang="sass">
-
+<style scoped>
+.my-custom-background {
+  background-color: #2E7D32; /* ваш кастомный цвет */
+}
 </style>

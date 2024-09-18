@@ -1,18 +1,33 @@
 package org.example.agroshare2.services;
 
 import lombok.RequiredArgsConstructor;
+import org.example.agroshare2.dto.PersonDto;
+import org.example.agroshare2.entities.Individual;
+import org.example.agroshare2.entities.Legal;
 import org.example.agroshare2.entities.Role;
 import org.example.agroshare2.entities.User;
+import org.example.agroshare2.repositories.IndividualRepository;
+import org.example.agroshare2.repositories.LegalRepository;
 import org.example.agroshare2.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository repository;
+
+    @Autowired
+    private IndividualRepository individualRepository;
+
+    @Autowired
+    private LegalRepository legalRepository;
 
     /**
      * Сохранение пользователя
@@ -86,5 +101,34 @@ public class UserService {
         var user = getCurrentUser();
         user.setRole(Role.ROLE_ADMIN);
         save(user);
+    }
+
+    public PersonDto getUserById(Long id) {
+        return entityToView(repository.findById(id).orElseThrow());
+    }
+
+    private PersonDto entityToView(User user) {
+        PersonDto person = PersonDto.builder()
+                .userType(user.getPersonType())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .inn(user.getInn())
+                .phoneNumber(user.getPhoneNumber())
+                .build();
+
+        if ("I".equals(user.getPersonType()) && user.getTypedUserId() != null) {
+            Optional<Individual> individual = individualRepository.findById(user.getTypedUserId());
+            if (individual.isPresent()) {
+                person.setFirstName(individual.get().getFirstName());
+                person.setLastName(individual.get().getLastName());
+            }
+        } else if ("L".equals(user.getPersonType()) && user.getTypedUserId() != null) {
+            Optional<Legal> legal = legalRepository.findById(user.getTypedUserId());
+            if (legal.isPresent()) {
+                person.setOrganizationName(legal.get().getOrganizationName());
+            }
+        }
+
+        return person;
     }
 }

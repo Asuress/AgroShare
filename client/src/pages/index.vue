@@ -4,7 +4,7 @@
 
 <script>
 import axios from "axios";
-import DatePicker from "@/components/date-picker.vue";
+import DatePicker from "@/components/app-calendar.vue";
 import UserHelper from "@/utils/user-helper";
 import Publications from "@/pages/publications/publications.vue";
 
@@ -53,6 +53,7 @@ export default {
     }
   },
   mounted() {
+    console.log("store?", this.$store.getters.username);
     console.log(localStorage.getItem('access_token'));
     axios.get("/publications/list/last").then(response => {
       console.log("response:", response);

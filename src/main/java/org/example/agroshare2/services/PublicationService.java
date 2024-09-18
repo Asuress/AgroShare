@@ -83,4 +83,30 @@ public class PublicationService {
 
         return publication;
     }
+
+    public List<Publication> findByUserId(Long id) {
+        return publicationRepository.findByUserId(id);
+    }
+
+    public PublicationDto findById(Long id) {
+        Optional<Publication> byId = publicationRepository.findById(id);
+        if (byId.isPresent()) {
+            Publication publication = byId.get();
+            PublicationDto publicationDto = new PublicationDto();
+            publicationDto.setPublicationType(publication.getPublicationType());
+            publicationDto.setDescription(publication.getDescription());
+            publicationDto.setPrice(publication.getPrice());
+            publicationDto.setTitle(publication.getTitle());
+
+            Optional<Category> categoryById = categoryRepository.findById(publication.getCategory());
+            publicationDto.setCategory(categoryById.orElseThrow().getCategoryName());
+
+            Optional<User> userById = userRepository.findById(publication.getUserId());
+            String email = userById.orElseThrow().getEmail();
+
+            publicationDto.setPublisher(email);
+            return publicationDto;
+        }
+        return null;
+    }
 }

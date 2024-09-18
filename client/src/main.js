@@ -14,37 +14,64 @@ import App from './App.vue';
 import {createApp} from 'vue'
 import Router from "@/router";
 import Axios from "axios";
-import {store} from "./stores/app"
-import * as colors from "vuetify/util/colors";
+import {store} from "@/stores/store"
+import {createVuetify} from "vuetify";
+import {components, directives} from "vuetify/dist/vuetify";
+import {aliases, mdi} from "vuetify/iconsets/mdi";
 
-Axios.defaults.baseURL = "http://localhost:8080"
+Axios.defaults.baseURL = "http://80.242.58.150:8001/api/"
+// Axios.defaults.baseURL = "http://localhost:8080/"
+
+// Создание Vuetify экземпляра с настройками темы
+const vuetify = createVuetify({
+  components,
+  directives,
+  theme: {
+    defaultTheme: 'light', // Установите тему по умолчанию
+    themes: {
+      light: {
+        colors: {
+          primary: '#3f51b5', // Основной цвет
+          secondary: '#ff5722', // Вторичный цвет
+          background: '#f5f5f5', // Цвет фона
+        },
+      },
+      dark: {
+        colors: {
+          primary: '#1e88e5',
+          background: '#ff5722',
+        },
+      },
+    },
+  },
+  icons: {
+    defaultSet: 'mdi',
+    aliases,
+    sets: {
+      mdi,
+    },
+  },
+});
 
 const app = createApp(App)
 
-// app.config.globalProperties.$vuetify.theme = {
-//   themes: {
-//     light: {
-//       primary: colors.purple,
-//       secondary: colors.grey.darken1,
-//       accent: colors.shades.black,
-//       error: colors.red.accent3,
-//       background: colors.indigo.lighten5, // Not automatically applied
-//       // ...
-//     },
-//     dark: {
-//       primary: colors.blue.lighten3,
-//       background: colors.indigo.base, // If not using lighten/darken, use base to return hex
-//       // ...
-//     },
-//   },
-// }
-
+// app.config.
 app.config.globalProperties.$router = Router;
 app.config.globalProperties.$username = '';
-app.config.globalProperties.$store = store;
-// app.config.globalProperties.$axios = Axios;
+app.config.errorHandler = (err, vm, info) => {
+  console.error('Error caught in global handler:', err);
+  console.error('Component:', vm);
+  console.error('Info:', info);
+
+  // Вы можете выводить сообщение или показывать его пользователю
+  alert('Произошла ошибка: ' + err.message);
+};
+
+app.use(store);
+app.use(Router);
+app.use(vuetify);
 
 registerPlugins(app)
-app.component(Router)
+// app.component(Router)
 
 app.mount('#app')

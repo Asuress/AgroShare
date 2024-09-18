@@ -16,9 +16,11 @@ export default defineConfig({
   plugins: [
     VueRouter(),
     Layouts(),
-    Vue({
-      template: { transformAssetUrls }
-    }),
+    Vue(
+        {
+          template: {transformAssetUrls}
+        }
+    ),
     // https://github.com/vuetifyjs/vuetify-loader/tree/master/packages/vite-plugin#readme
     Vuetify({
       autoImport: true,

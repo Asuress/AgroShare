@@ -4,7 +4,7 @@
       <v-card justify-center
               class="elevation-12 flex-0-0-100 black--text"
               color="grey-lighten-3">
-        <v-toolbar dark color="teal-darken-2">
+        <v-toolbar class="my-custom-background">
           <v-toolbar-title>Добавление объявления</v-toolbar-title>
         </v-toolbar>
         <v-card-text>
@@ -70,12 +70,12 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary"
+          <v-btn class="my-custom-background-button red--text"
                  @click="addPublication"
           >
             Добавить
           </v-btn>
-          <v-btn color="primary"
+          <v-btn class="my-custom-background-button"
                  @click="cancel"
           >
             Отменить
@@ -110,6 +110,7 @@ export default {
       router.go(-1);
     },
     addPublication() {
+      console.log("new publication data:", this.publication);
       PublicationHelper.addPublication(this.publication);
     }
   },
@@ -125,6 +126,8 @@ export default {
 }
 </script>
 
-<style scoped lang="sass">
-
+<style scoped>
+.my-custom-background {
+  background-color: #2E7D32; /* ваш кастомный цвет */
+}
 </style>

@@ -36,4 +36,14 @@ public class PublicationController {
     public Publication addPublication(@RequestBody PublicationDto publication) {
         return publicationService.createPublication(publication);
     }
+
+    @GetMapping("/find/user/{id}")
+    public List<Publication> findPublicationByUserId(@PathVariable Long id) {
+        return publicationService.findByUserId(id);
+    }
+
+    @GetMapping("/get/{id}")
+    public PublicationDto findPublicationInfoById(@PathVariable Long id) {
+        return publicationService.findById(id);
+    }
 }

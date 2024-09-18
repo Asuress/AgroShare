@@ -4,15 +4,15 @@
       <v-card justify-center
               class="elevation-12 flex-0-0-100 black--text"
               color="grey-lighten-3">
-        <v-toolbar dark color="teal-darken-2">
-          <v-toolbar-title>Login form</v-toolbar-title>
+        <v-toolbar dark class="my-custom-background">
+          <v-toolbar-title>Форма регистрации</v-toolbar-title>
         </v-toolbar>
         <v-card-text>
           <v-form>
             <v-text-field
               prepend-icon="person"
               name="login"
-              label="Login"
+              label="Имя пользователя"
               type="text"
               v-model="user.username"
               :rules="[RulesUtils.rules.required]"
@@ -21,7 +21,7 @@
               id="password"
               prepend-icon="lock"
               name="password"
-              label="Password"
+              label="Пароль"
               type="password"
               v-model="user.password"
               :rules="[RulesUtils.rules.required]"
@@ -52,7 +52,7 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" @click="register">Register</v-btn>
+          <v-btn class="my-custom-background-button" @click="register">Register</v-btn>
         </v-card-actions>
       </v-card>
     </v-layout>
@@ -95,10 +95,11 @@ export default {
   methods: {
     register() {
       console.log("register", this.user)
-      UserHelper.register(this.user.username,
-        this.user.password,
-        this.user.email,
-        this.user.type);
+      alert('Регистрация пользователей ограничена! Свяжитесь с техподдержкой.');
+      // UserHelper.register(this.user.username,
+      //   this.user.password,
+      //   this.user.email,
+      //   this.user.type);
       // this.$router.go(-1);
     },
     required(v) {
@@ -108,4 +109,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+.my-custom-background {
+  background-color: #2E7D32; /* ваш кастомный цвет */
+}
+</style>
