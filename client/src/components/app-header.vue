@@ -46,14 +46,14 @@
     <v-btn v-if="innerUsername === '' || innerUsername === null || innerUsername === undefined"
            router to="/login"
            @click="login"
-           text="Login"></v-btn>
+           text="Вход"></v-btn>
     <v-btn v-if="innerUsername === '' || innerUsername === null || innerUsername === undefined"
            router to="/registration"
            @click="registration"
-           text="Registration"
+           text="Регистрация"
     ></v-btn>
     <v-btn v-if="innerUsername !== '' && innerUsername !== null && innerUsername !== undefined"
-           text="Log out"
+           text="Выход"
            @click="logout"
     ></v-btn>
     <v-icon v-if="innerUsername !== '' && innerUsername !== null && innerUsername !== undefined"

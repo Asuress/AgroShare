@@ -51,20 +51,34 @@
               </v-col>
             </v-row>
             <v-row>
-              <v-radio-group inline
-                             v-model="publication.isRent"
-              >
-                <v-radio label="Аренда"
-                         value="true"
+              <v-col class="v-col-md-2">
+                <v-radio-group inline
+                               v-model="publication.isRent"
                 >
+                  <v-radio label="Аренда"
+                           value="true"
+                  >
 
-                </v-radio>
-                <v-radio label="Продажа"
-                         value="false"
-                >
+                  </v-radio>
+                  <v-radio label="Продажа"
+                           value="false"
+                  >
 
-                </v-radio>
-              </v-radio-group>
+                  </v-radio>
+                </v-radio-group>
+              </v-col>
+              <v-col class="v-col-md-2">
+                <v-btn icon="attach" class="my-custom-background-button mb-2" block rounded
+                       @click="triggerPublicationImageUpload">Добавить фото
+                </v-btn>
+                <input type="file" ref="publicationImageRef" @change="onPublicationImageChange" accept="image/*"
+                       style="display: none;"/>
+              </v-col>
+              <v-col class="v-col-md-8">
+                <!--              <v-avatar size="100" class="mx-auto mb-4">-->
+                <v-img :src="publication.publicationImage"/>
+                <!--              </v-avatar>-->
+              </v-col>
             </v-row>
           </v-form>
         </v-card-text>
@@ -101,6 +115,7 @@ export default {
         selected: '',
         isRent: true,
         username: '',
+        publicationImage: null
       },
       categories: [],
     }
@@ -112,7 +127,22 @@ export default {
     addPublication() {
       console.log("new publication data:", this.publication);
       PublicationHelper.addPublication(this.publication);
-    }
+    },
+    triggerPublicationImageUpload() {
+      this.$refs.publicationImageRef.click();
+    },
+    // Изменение аватара
+    onPublicationImageChange(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.publication.publicationImage = e.target.result; // Показываем превью аватара
+          console.log("publication image:", this.publication.publicationImage);
+        };
+        reader.readAsDataURL(file);
+      }
+    },
   },
   created() {
     PublicationHelper.getCategories((data) => {

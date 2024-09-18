@@ -4,9 +4,8 @@
   >
 
     <v-layout>
-<!--      #6B6748-->
       <v-card
-        class="flex-0-0-100 black--text ml-auto my-custom-background"
+        class="flex-0-0-100 black--text ml-auto my-custom-background mb-4"
       >
         <v-row>
           <v-col md="8"
@@ -48,12 +47,6 @@
     <v-layout>
       <v-col md="2">
 
-        <v-treeview :items="categories"
-                    item-value="id"
-
-                    activatable
-        >
-        </v-treeview>
       </v-col>
       <v-row class="list__publications">
         <v-col md="4" v-for="item in publications" :key="item.id">
