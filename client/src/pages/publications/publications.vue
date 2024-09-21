@@ -57,7 +57,7 @@
 
             <v-img
               height="250"
-              :src="require(getImagePath(item))"
+              :src="getImagePath(item)"
 
             ></v-img> <!-- С помощью v-img добавляем изображение карточки -->
 
