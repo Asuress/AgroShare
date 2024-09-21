@@ -152,7 +152,8 @@ export default {
     getImagePath(item) {
       console.log("item", item)
       console.log("item", item.image)
-      return new URL(item.image, import.meta.url).href;
+      console.log(new URL(item.image, import.meta.url).href)
+      return item.image;
       // switch (item.title) {
       //   case "МТЗ-82":
       //     console.log("item title МТЗ", "@/assets/МТЗ.jpg")
