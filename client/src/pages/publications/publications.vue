@@ -57,7 +57,7 @@
 
             <v-img
               height="250"
-              :src="item.image"
+              :src="getImagePath(item)"
 
             ></v-img> <!-- С помощью v-img добавляем изображение карточки -->
 
@@ -151,14 +151,16 @@ export default {
     },
     getImagePath(item) {
       console.log("item", item)
-      switch (item.title) {
-        case "МТЗ-82":
-          console.log("item title МТЗ", "@/assets/МТЗ.jpg")
-          return "@/assets/МТЗ.jpg"
-        default:
-          console.log("item title default", item.title)
-          return "";
-      }
+      console.log("item", item.image)
+      return new URL(item.image, import.meta.url).href;
+      // switch (item.title) {
+      //   case "МТЗ-82":
+      //     console.log("item title МТЗ", "@/assets/МТЗ.jpg")
+      //     return "@/assets/МТЗ.jpg"
+      //   default:
+      //     console.log("item title default", item.title)
+      //     return "";
+      // }
     }
   },
   mounted() {
