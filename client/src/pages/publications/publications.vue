@@ -78,7 +78,7 @@
               <p class="text-h5">{{ item.price }} руб.</p>
             </v-card-text>
 
-            <v-card-text> <!-- Описание заведения -->
+            <v-card-text class="pe-0 pt-0"> <!-- Описание заведения -->
               <p class="text-body-1">{{ item.description }}</p>
             </v-card-text>
 
