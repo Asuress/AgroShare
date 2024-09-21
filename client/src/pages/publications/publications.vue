@@ -52,16 +52,22 @@
         <v-col md="4" v-for="item in publications" :key="item.id">
           <v-card @click="openPublication(item.id)"
                   max-height="500"
+                  class="bg-grey-darken-1"
           >
 
             <v-img
               height="250"
-              :src="item.img"
+              :src="item.image"
+
             ></v-img> <!-- С помощью v-img добавляем изображение карточки -->
 
             <v-card-title class="text-wrap"> <!-- Заголовок заведения -->
               <h3 class="text-h4">{{ item.title }}</h3>
             </v-card-title>
+
+            <v-card-text> <!-- Описание заведения -->
+              <p class="text-h5">{{ item.price }} руб.</p>
+            </v-card-text>
 
             <v-card-text> <!-- Описание заведения -->
               <p class="text-body-1">{{ item.description }}</p>
@@ -141,6 +147,17 @@ export default {
         this.$router.push(`/publications/publication/${id}`);
       } else {
         this.$router.push(`/registration`);
+      }
+    },
+    getImagePath(item) {
+      console.log("item", item)
+      switch (item.title) {
+        case "МТЗ-82":
+          console.log("item title МТЗ", "@/assets/МТЗ.jpg")
+          return "@/assets/МТЗ.jpg"
+        default:
+          console.log("item title default", item.title)
+          return "";
       }
     }
   },
