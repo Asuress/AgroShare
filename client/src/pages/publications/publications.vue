@@ -58,8 +58,17 @@
             <v-img
               height="250"
               :src="'@' + getImagePath(item)"
-
-            ></v-img> <!-- С помощью v-img добавляем изображение карточки -->
+              color="black"
+            >
+              <template v-slot:placeholder>
+                <div class="d-flex align-center justify-center fill-height">
+                  <v-progress-circular
+                    color="grey-lighten-4"
+                    indeterminate
+                  ></v-progress-circular>
+                </div>
+              </template>
+            </v-img> <!-- С помощью v-img добавляем изображение карточки -->
 
             <v-card-title class="text-wrap"> <!-- Заголовок заведения -->
               <h3 class="text-h4">{{ item.title }}</h3>
