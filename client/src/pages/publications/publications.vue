@@ -154,7 +154,7 @@ export default {
       console.log("item", item.image)
       console.log(new URL(item.image, import.meta.url).href)
       console.log(new URL(item.image, import.meta.url).pathname)
-      return new URL(item.image, import.meta.url).pathname;
+      return item.image;
       // switch (item.title) {
       //   case "МТЗ-82":
       //     console.log("item title МТЗ", "@/assets/МТЗ.jpg")
