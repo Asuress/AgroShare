@@ -5,6 +5,7 @@ import org.example.agroshare2.entities.Category;
 import org.example.agroshare2.entities.Publication;
 import org.example.agroshare2.services.PublicationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,7 +43,7 @@ public class PublicationController {
         return publicationService.findByUserId(id);
     }
 
-    @GetMapping("/get/{id}")
+    @GetMapping(value = "/get/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public PublicationDto findPublicationInfoById(@PathVariable Long id) {
         return publicationService.findById(id);
     }
