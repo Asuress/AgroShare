@@ -1,73 +1,74 @@
 <template>
   <v-container>
     <!-- Основная карточка объявления -->
-    <v-card class="ad-card" outlined>
-      <v-row>
-        <!-- Изображение товара -->
-        <v-col cols="5">
-          <v-img :src="ad.image"
-                 alt="Image of ad"
-                 aspect-ratio="1"
-                 height="400"
-                 cover
-                 contain></v-img>
-          <v-btn icon color="red" @click="toggleFavorite">
-            <v-icon>{{ isFavorite ? 'mdi-heart' : 'mdi-heart-outline' }}</v-icon>
-          </v-btn>
-        </v-col>
+<!--    <v-card class="ad-card" outlined>-->
+<!--      <v-row>-->
+<!--        &lt;!&ndash; Изображение товара &ndash;&gt;-->
+<!--        <v-col cols="5">-->
+<!--          <v-img :src="ad.image"-->
+<!--                 alt="Image of ad"-->
+<!--                 aspect-ratio="1"-->
+<!--                 height="400"-->
+<!--                 cover-->
+<!--                 contain></v-img>-->
+<!--          <v-btn icon color="red" @click="toggleFavorite">-->
+<!--            <v-icon>{{ isFavorite ? 'mdi-heart' : 'mdi-heart-outline' }}</v-icon>-->
+<!--          </v-btn>-->
+<!--        </v-col>-->
 
-        <!-- Описание товара -->
-        <v-col cols="7">
-          <v-card-title class="headline" wrap>{{ ad.title }}</v-card-title>
-          <v-card-subtitle class="category">
-            Категория: {{ ad.category }}
-          </v-card-subtitle>
-          <p class="location">
-            <v-icon left>mdi-map-marker</v-icon>
-            {{ ad.location }}
-          </p>
-          <v-divider></v-divider>
+<!--        &lt;!&ndash; Описание товара &ndash;&gt;-->
+<!--        <v-col cols="7">-->
+<!--          <v-card-title class="headline" wrap>{{ ad.title }}</v-card-title>-->
+<!--          <v-card-subtitle class="category">-->
+<!--            Категория: {{ ad.category }}-->
+<!--          </v-card-subtitle>-->
+<!--          <p class="location">-->
+<!--            <v-icon left>mdi-map-marker</v-icon>-->
+<!--            {{ ad.location }}-->
+<!--          </p>-->
+<!--          <v-divider></v-divider>-->
 
-          <v-card-text>
-            <p class="price" v-if="!!ad.price">{{ formatPrice(ad.price) }} руб.</p>
-            <p>{{ ad.description }}</p>
-            <v-divider></v-divider>
-            <!--            <p class="meta-info">Дата публикации: {{ ad.date }}</p>-->
-            <!--            <p class="meta-info">Просмотры: {{ ad.views }}</p>-->
-          </v-card-text>
+<!--          <v-card-text>-->
+<!--            <p class="price" v-if="!!ad.price">{{ formatPrice(ad.price) }} руб.</p>-->
+<!--            <p>{{ ad.description }}</p>-->
+<!--            <v-divider></v-divider>-->
+<!--            &lt;!&ndash;            <p class="meta-info">Дата публикации: {{ ad.date }}</p>&ndash;&gt;-->
+<!--            &lt;!&ndash;            <p class="meta-info">Просмотры: {{ ad.views }}</p>&ndash;&gt;-->
+<!--          </v-card-text>-->
 
-          <!-- Кнопки действий -->
-          <v-card-actions>
-            <v-btn class="my-custom-background-button" disabled @click="viewDetails">Подробнее</v-btn>
-            <v-btn class="my-custom-background-button-primary" @click="showContact">Показать телефон</v-btn>
-          </v-card-actions>
+<!--          &lt;!&ndash; Кнопки действий &ndash;&gt;-->
+<!--          <v-card-actions>-->
+<!--            <v-btn class="my-custom-background-button" disabled @click="viewDetails">Подробнее</v-btn>-->
+<!--            <v-btn class="my-custom-background-button-primary" @click="showContact">Показать телефон</v-btn>-->
+<!--          </v-card-actions>-->
 
-          <!-- Информация о продавце -->
-          <v-divider></v-divider>
-          <v-card-subtitle class="seller-info">
-            Продавец: {{ ad.email }}
-          </v-card-subtitle>
-          <v-btn class="my-custom-background-button" @click="viewSellerAds">Все объявления продавца</v-btn>
-        </v-col>
-        <v-col>
-          <app-calendar v-if="ad.publicationType === 'R'">
-          </app-calendar>
-        </v-col>
-      </v-row>
+<!--          &lt;!&ndash; Информация о продавце &ndash;&gt;-->
+<!--          <v-divider></v-divider>-->
+<!--          <v-card-subtitle class="seller-info">-->
+<!--            Продавец: {{ ad.email }}-->
+<!--          </v-card-subtitle>-->
+<!--          <v-btn class="my-custom-background-button" @click="viewSellerAds">Все объявления продавца</v-btn>-->
+<!--        </v-col>-->
+<!--        <v-col>-->
+<!--          <app-calendar v-if="ad.publicationType === 'R'">-->
+<!--          </app-calendar>-->
+<!--        </v-col>-->
+<!--      </v-row>-->
 
-      <!-- Модальное окно для показа телефона -->
-      <v-dialog v-model="contactDialog" persistent max-width="400">
-        <v-card>
-          <v-card-title>Контактная информация</v-card-title>
-          <v-card-text>
-            <p><strong>Телефон:</strong> {{ ad.contact.phone }}</p>
-          </v-card-text>
-          <v-card-actions>
-            <v-btn class="my-custom-background-button" @click="contactDialog = false">Закрыть</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </v-card>
+<!--      &lt;!&ndash; Модальное окно для показа телефона &ndash;&gt;-->
+<!--      <v-dialog v-model="contactDialog" persistent max-width="400">-->
+<!--        <v-card>-->
+<!--          <v-card-title>Контактная информация</v-card-title>-->
+<!--          <v-card-text>-->
+<!--            <p><strong>Телефон:</strong> {{ ad.contact.phone }}</p>-->
+<!--          </v-card-text>-->
+<!--          <v-card-actions>-->
+<!--            <v-btn class="my-custom-background-button" @click="contactDialog = false">Закрыть</v-btn>-->
+<!--          </v-card-actions>-->
+<!--        </v-card>-->
+<!--      </v-dialog>-->
+<!--    </v-card>-->
+    PUBLICATION
   </v-container>
 </template>
 
