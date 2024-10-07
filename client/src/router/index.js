@@ -44,7 +44,8 @@ const routes = [
   {
     path: '/publications/publication/:id',
     name: 'publication',
-    component: Publication
+    component: Publication,
+    props: true
   },
   {
     path: '/add-publication',
