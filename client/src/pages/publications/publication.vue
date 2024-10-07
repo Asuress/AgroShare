@@ -1,9 +1,6 @@
 <template>
   <v-container>
     <v-card outlined>
-      <v-card-title>
-        Основная карточка объявления
-      </v-card-title>
       <v-row>
         <!-- Изображение товара -->
         <v-col cols="5">
