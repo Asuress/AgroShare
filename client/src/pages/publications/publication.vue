@@ -1,7 +1,7 @@
 <template>
   <v-container>
      Основная карточка объявления
-    <v-card class="ad-card" outlined>
+    <v-card outlined>
       DEAD INSIDE v-card
       <v-row>
         DEAD INSIDE v-row
