@@ -31,7 +31,7 @@ const routes = [
     component: Login
   },
   {
-    path: '/profile/:id',
+    path: '/profile/another-profile/:id',
     name: 'profile',
     component: Profile,
     props: true

@@ -131,7 +131,7 @@ export default {
     },
     profile() {
       console.log("id:", this.$store.getters.id);
-      this.$router.push(`/profile/${this.$store.getters.id}`);
+      this.$router.push(`/profile/another-profile/${this.$store.getters.id}`);
     }
   },
   mounted() {
