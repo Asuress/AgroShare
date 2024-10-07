@@ -2,9 +2,12 @@
   <v-container>
      Основная карточка объявления
     <v-card class="ad-card" outlined>
+      DEAD INSIDE v-card
       <v-row>
+        DEAD INSIDE v-row
         <!-- Изображение товара -->
         <v-col cols="5">
+          DEAD INSIDE v-col
 <!--          <v-img :src="ad.image"-->
 <!--                 alt="Image of ad"-->
 <!--                 aspect-ratio="1"-->
