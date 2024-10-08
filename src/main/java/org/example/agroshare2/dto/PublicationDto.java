@@ -13,4 +13,5 @@ public class PublicationDto {
     private String publicationType;
     private String category;
     private String publisher;
+    private byte[] image;
 }

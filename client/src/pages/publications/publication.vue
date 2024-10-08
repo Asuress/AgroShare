@@ -9,7 +9,9 @@
                  aspect-ratio="1"
                  height="400"
                  cover
-                 contain></v-img>
+                 contain>
+
+          </v-img>
           <v-btn icon color="red" @click="toggleFavorite">
             <v-icon>{{ isFavorite ? 'mdi-heart' : 'mdi-heart-outline' }}</v-icon>
           </v-btn>
@@ -28,7 +30,8 @@
           <v-divider></v-divider>
 
           <v-card-text>
-            <p class="price" v-if="!!ad.price">{{ formatPrice(ad.price) }} руб.</p>
+            <p class="price" v-if="!!ad.price">Цена: {{ formatPrice(ad.price) }} руб.</p>
+            <h1>Описание</h1>
             <p>{{ ad.description }}</p>
             <v-divider></v-divider>
             <!--            <p class="meta-info">Дата публикации: {{ ad.date }}</p>-->
@@ -75,6 +78,7 @@ import UserHelper from "@/utils/user-helper";
 import PublicationHelper from "@/utils/publications/publication-helper";
 import {th} from "vuetify/locale";
 import AppCalendar from "@/components/app-calendar.vue";
+import ImageUtils from "@/utils/image-utils";
 
 export default {
   components: {AppCalendar},
@@ -124,6 +128,14 @@ export default {
         await PublicationHelper.getPublicationInfoById(this.$route.params.id).then(response => {
           console.log("publication data", response.data);
           this.ad = response.data;
+
+          this.ad.image = ImageUtils.convertRawDataToSrc(this.ad.image)
+
+          // let base64String = btoa(
+          //   String.fromCharCode.apply(null, new Uint8Array(this.ad.image))
+          // );
+          // this.ad.image = "data:image/jpg;base64," + base64String;
+          // this.ad.image = "data:image/jpg;base64," + this.ad.image
         });
       } catch (error) {
         console.error('Ошибка при загрузке данных:', error);

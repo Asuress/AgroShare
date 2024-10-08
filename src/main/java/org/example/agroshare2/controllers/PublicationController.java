@@ -6,9 +6,10 @@ import org.example.agroshare2.entities.Publication;
 import org.example.agroshare2.services.PublicationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,5 +47,12 @@ public class PublicationController {
     @GetMapping(value = "/get/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public PublicationDto findPublicationInfoById(@PathVariable Long id) {
         return publicationService.findById(id);
+    }
+
+    @PostMapping(value = "/{id}/upload-image", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public String uploadFile(@PathVariable("id") Long id, @RequestParam("file") MultipartFile file) throws IOException {
+        publicationService.addImageToPublication(id, file);
+
+        return "huy";
     }
 }

@@ -32,6 +32,6 @@ public class Publication {
     private String description;
 
     @Column(name = "image")
-    private String image;
+    private byte[] image;
 
 }

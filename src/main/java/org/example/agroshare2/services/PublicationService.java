@@ -10,10 +10,13 @@ import org.example.agroshare2.repositories.PublicationRepository;
 import org.example.agroshare2.repositories.UserRepository;
 import org.hibernate.mapping.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -30,35 +33,15 @@ public class PublicationService {
     @Autowired
     private PublicationRepository publicationRepository;
 
-    List<Publication> publications;
     @Autowired
     private UserRepository userRepository;
 
     public List<Publication> getLastPublications() {
-//        publications = new ArrayList<>();
-//        for (int i = 0; i < 7; i++) {
-//            Publication publication = new Publication();
-//            publication.setTitle("Title " + i);
-//            publications.add(publication);
-//        }
         return publicationRepository.findLast10();
     }
 
     public List<Publication> findByTitle(String title) {
-
-        return publications.stream()
-                .filter(publication ->
-                {
-                    Pattern pattern = Pattern.compile(".*"
-                                    + title.replace(" ", ".*")
-                                    + ".*",
-                            Pattern.CASE_INSENSITIVE);
-                    Matcher matcher = pattern.matcher(publication.getTitle()
-                            .toLowerCase()
-                            .strip());
-                    return matcher.find();
-                })
-                .collect(Collectors.toList());
+        return publicationRepository.findByTitleLike('%' + title + '%');
     }
 
     public List<Category> getCategories() {
@@ -97,6 +80,7 @@ public class PublicationService {
             publicationDto.setDescription(publication.getDescription());
             publicationDto.setPrice(publication.getPrice());
             publicationDto.setTitle(publication.getTitle());
+            publicationDto.setImage(publication.getImage());
 
             Optional<Category> categoryById = categoryRepository.findById(publication.getCategory());
             publicationDto.setCategory(categoryById.orElseThrow().getCategoryName());
@@ -108,5 +92,12 @@ public class PublicationService {
             return publicationDto;
         }
         return null;
+    }
+
+    public void addImageToPublication(Long id, MultipartFile file) throws IOException {
+        Publication publication = publicationRepository.findById(id).orElseThrow();
+        Resource resource = file.getResource();
+        publication.setImage(file.getBytes());
+        publicationRepository.save(publication);
     }
 }

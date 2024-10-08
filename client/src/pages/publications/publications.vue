@@ -55,19 +55,18 @@
                   class="bg-grey-darken-1"
           >
 
-            <v-img
-              height="250"
-              :src="'@' + getImagePath(item)"
-              color="black"
+            <v-img :src="item.image"
+                   height="250"
+                   color="black"
             >
-              <template v-slot:placeholder>
-                <div class="d-flex align-center justify-center fill-height">
-                  <v-progress-circular
-                    color="grey-lighten-4"
-                    indeterminate
-                  ></v-progress-circular>
-                </div>
-              </template>
+              <!--              <template v-slot:placeholder>-->
+              <!--                <div class="d-flex align-center justify-center fill-height">-->
+              <!--                  <v-progress-circular-->
+              <!--                    color="grey-lighten-4"-->
+              <!--                    indeterminate-->
+              <!--                  ></v-progress-circular>-->
+              <!--                </div>-->
+              <!--              </template>-->
             </v-img> <!-- С помощью v-img добавляем изображение карточки -->
 
             <v-card-title class="text-wrap"> <!-- Заголовок заведения -->
@@ -93,6 +92,7 @@
 <script>
 import UserHelper from "@/utils/user-helper";
 import axios from "axios";
+import ImageUtils from "@/utils/image-utils";
 
 export default {
   name: "publications",
@@ -105,9 +105,9 @@ export default {
           id: 1,
           title: "Category1",
           children: [
-            { id: 2, title: 'Calendar : app' },
-            { id: 3, title: 'Chrome : app' },
-            { id: 4, title: 'Webstorm : app' },
+            {id: 2, title: 'Calendar : app'},
+            {id: 3, title: 'Chrome : app'},
+            {id: 4, title: 'Webstorm : app'},
           ],
         },
         {
@@ -158,27 +158,17 @@ export default {
         this.$router.push(`/registration`);
       }
     },
-    getImagePath(item) {
-      console.log("item", item)
-      console.log("item", item.image)
-      console.log(new URL(item.image, import.meta.url).href)
-      console.log(new URL(item.image, import.meta.url).pathname)
-      return item.image;
-      // switch (item.title) {
-      //   case "МТЗ-82":
-      //     console.log("item title МТЗ", "@/assets/МТЗ.jpg")
-      //     return "@/assets/МТЗ.jpg"
-      //   default:
-      //     console.log("item title default", item.title)
-      //     return "";
-      // }
-    }
   },
-  mounted() {
+  async mounted() {
     console.log(localStorage.getItem('access_token'));
-    axios.get("/publications/list/last").then(response => {
+    await axios.get("/publications/list/last").then(response => {
       console.log("response:", response);
       this.publications = response.data;
+      this.publications.forEach(item => {
+        console.log("item:", item)
+        item.image = ImageUtils.convertRawDataToSrc(item.image)
+      });
+      console.log('publications converted', this.publications);
     }).catch(error => {
       console.log("error", error)
     });
