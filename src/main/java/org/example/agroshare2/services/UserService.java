@@ -10,11 +10,13 @@ import org.example.agroshare2.repositories.IndividualRepository;
 import org.example.agroshare2.repositories.LegalRepository;
 import org.example.agroshare2.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
@@ -28,6 +30,8 @@ public class UserService {
 
     @Autowired
     private LegalRepository legalRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     /**
      * Сохранение пользователя
@@ -114,6 +118,7 @@ public class UserService {
                 .email(user.getEmail())
                 .inn(user.getInn())
                 .phoneNumber(user.getPhoneNumber())
+                .image(user.getImage())
                 .build();
 
         if ("I".equals(user.getPersonType()) && user.getTypedUserId() != null) {
@@ -130,5 +135,17 @@ public class UserService {
         }
 
         return person;
+    }
+
+    public void addImageToProfile(Long id, MultipartFile file) {
+        Optional<User> userById = userRepository.findById(id);
+        User user = userById.orElseThrow();
+        Resource resource = file.getResource();
+        try {
+            user.setImage(file.getBytes());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        userRepository.save(user);
     }
 }

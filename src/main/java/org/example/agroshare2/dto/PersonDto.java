@@ -16,4 +16,5 @@ public class PersonDto {
     private String inn;
     private String userType;
     private String organizationName;
+    private byte[] image;
 }

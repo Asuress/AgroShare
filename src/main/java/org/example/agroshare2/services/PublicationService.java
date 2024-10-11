@@ -36,8 +36,11 @@ public class PublicationService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<Publication> getLastPublications() {
-        return publicationRepository.findLast10();
+    public List<PublicationDto> getLastPublications() {
+        return publicationRepository.findLast10()
+                .stream()
+                .map(this::mapEntityToDto)
+                .collect(Collectors.toList());
     }
 
     public List<Publication> findByTitle(String title) {
@@ -51,10 +54,10 @@ public class PublicationService {
     public Publication createPublication(PublicationDto publicationDto) {
         Publication publication = new Publication();
 
-        Optional<User> byUsername = userRepository.findByUsername(publicationDto.getPublisher());
+        Optional<User> byId = userRepository.findById(publicationDto.getPublisherId());
 
         publication.setTitle(publicationDto.getTitle());
-        publication.setUserId(byUsername.isPresent() ? byUsername.get().getId() : null);
+        publication.setUserId(byId.isPresent() ? byId.get().getId() : null);
         publication.setPrice(publicationDto.getPrice());
         publication.setPublicationType(publicationDto.getPublicationType());
         publication.setDescription(publicationDto.getDescription());
@@ -75,21 +78,7 @@ public class PublicationService {
         Optional<Publication> byId = publicationRepository.findById(id);
         if (byId.isPresent()) {
             Publication publication = byId.get();
-            PublicationDto publicationDto = new PublicationDto();
-            publicationDto.setPublicationType(publication.getPublicationType());
-            publicationDto.setDescription(publication.getDescription());
-            publicationDto.setPrice(publication.getPrice());
-            publicationDto.setTitle(publication.getTitle());
-            publicationDto.setImage(publication.getImage());
-
-            Optional<Category> categoryById = categoryRepository.findById(publication.getCategory());
-            publicationDto.setCategory(categoryById.orElseThrow().getCategoryName());
-
-            Optional<User> userById = userRepository.findById(publication.getUserId());
-            String email = userById.orElseThrow().getEmail();
-
-            publicationDto.setPublisher(email);
-            return publicationDto;
+            return mapEntityToDto(publication);
         }
         return null;
     }
@@ -99,5 +88,26 @@ public class PublicationService {
         Resource resource = file.getResource();
         publication.setImage(file.getBytes());
         publicationRepository.save(publication);
+    }
+
+    private PublicationDto mapEntityToDto(Publication publication) {
+        PublicationDto publicationDto = new PublicationDto();
+        publicationDto.setId(publication.getId());
+        publicationDto.setPublicationType(publication.getPublicationType());
+        publicationDto.setDescription(publication.getDescription());
+        publicationDto.setPrice(publication.getPrice());
+        publicationDto.setTitle(publication.getTitle());
+        publicationDto.setImage(publication.getImage());
+
+        Optional<Category> categoryById = categoryRepository.findById(publication.getCategory());
+        publicationDto.setCategory(categoryById.orElseThrow().getCategoryName());
+
+        Optional<User> userById = userRepository.findById(publication.getUserId());
+        User user = userById.orElseThrow();
+        String email = user.getEmail();
+
+        publicationDto.setPublisherEmail(email);
+        publicationDto.setPublisherId(user.getId());
+        return publicationDto;
     }
 }

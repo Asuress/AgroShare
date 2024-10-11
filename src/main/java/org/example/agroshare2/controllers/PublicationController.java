@@ -20,7 +20,7 @@ public class PublicationController {
     private PublicationService publicationService;
 
     @GetMapping("/list/last")
-    public List<Publication> listLastPublication() {
+    public List<PublicationDto> listLastPublication() {
         return publicationService.getLastPublications();
     }
 

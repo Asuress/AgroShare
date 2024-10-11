@@ -25,6 +25,11 @@ public class AuthenticationController {
         return authenticationService.signUp(request);
     }
 
+//    @GetMapping("/login-expired")
+//    public boolean loginExpired() {
+//        return authenticationService.
+//    }
+
 //    @PostMapping("/logut")
 //    public void logOut() {
 ////        return authenticationService.

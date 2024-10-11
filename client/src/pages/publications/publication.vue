@@ -41,7 +41,7 @@
           <!-- Кнопки действий -->
           <v-card-actions>
             <v-btn class="my-custom-background-button" disabled @click="viewDetails">Подробнее</v-btn>
-            <v-btn class="my-custom-background-button-primary" @click="showContact">Показать телефон</v-btn>
+            <v-btn class="my-custom-background-button-primary" @click="showContact">Показать контактные данные</v-btn>
           </v-card-actions>
 
           <!-- Информация о продавце -->
@@ -52,7 +52,13 @@
           <v-btn class="my-custom-background-button" @click="viewSellerAds">Все объявления продавца</v-btn>
         </v-col>
         <v-col>
-          <app-calendar v-if="ad.publicationType === 'R'">
+<!--          <app-calendar v-if="ad.publicationType === 'R'"-->
+<!--          >-->
+<!--          </app-calendar>-->
+        </v-col>
+        <v-col>
+          <app-calendar v-if="ad.publicationType === 'R'"
+          >
           </app-calendar>
         </v-col>
       </v-row>
@@ -62,7 +68,8 @@
         <v-card>
           <v-card-title>Контактная информация</v-card-title>
           <v-card-text>
-            <p><strong>Телефон:</strong> {{ ad.contact.phone }}</p>
+            <p><strong>Телефон:</strong> {{ ad.phone }}</p>
+            <p><strong>Почта:</strong> {{ ad.publisher }}</p>
           </v-card-text>
           <v-card-actions>
             <v-btn class="my-custom-background-button" @click="contactDialog = false">Закрыть</v-btn>
@@ -113,7 +120,7 @@ export default {
       this.contactDialog = true;
     },
     viewSellerAds() {
-      this.$router.push(`/publications/user/${id}`);
+      this.$router.push(`/user/publications/${this.ad.publisherId}`);
     },
     toggleFavorite() {
       this.isFavorite = !this.isFavorite;

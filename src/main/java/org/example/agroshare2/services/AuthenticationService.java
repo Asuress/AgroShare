@@ -35,6 +35,10 @@ public class AuthenticationService {
         return "";
     }
 
+//    public boolean isTokenExpired(String token) {
+//        return jwtService.isTokenValid(token);
+//    }
+
     /**
      * Регистрация пользователя
      *

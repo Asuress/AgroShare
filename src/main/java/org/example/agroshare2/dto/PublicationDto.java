@@ -7,11 +7,13 @@ import org.example.agroshare2.entities.Category;
 @Getter
 @Setter
 public class PublicationDto {
+    private Long id;
     private String title;
     private String description;
     private String price;
     private String publicationType;
     private String category;
-    private String publisher;
+    private String publisherEmail;
+    private Long publisherId;
     private byte[] image;
 }

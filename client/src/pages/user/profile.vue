@@ -9,7 +9,7 @@
       <v-col cols="12" md="4">
         <v-card class="elevation-1 rounded-lg px-4 py-6 text-center">
           <v-avatar size="100" class="mx-auto mb-4">
-            <img :src="avatarPreview || user.avatar" alt="Аватар пользователя" class="rounded-circle">
+            <img :src="avatarPreview || user.image" alt="Аватар пользователя" class="rounded-circle">
           </v-avatar>
 
           <!-- Кнопка для выбора нового изображения -->
@@ -88,6 +88,7 @@
 <script>
 import UserHelper from "@/utils/user-helper";
 import PublicationHelper from "@/utils/publications/publication-helper";
+import ImageUtils from "@/utils/image-utils";
 
 export default {
   name: "Profile",
@@ -164,9 +165,12 @@ export default {
       if (file) {
         const reader = new FileReader();
         reader.onload = (e) => {
-          this.avatarPreview = e.target.result; // Показываем превью аватара
+          this.avatarPreview = e.target.result;
+          console.log("image", e.target.result)// Показываем превью аватара
         };
         reader.readAsDataURL(file);
+        console.log()
+        ImageUtils.setProfileData(this.user.id, this.avatarPreview);
       }
     },
     async fetchData() {
@@ -177,7 +181,7 @@ export default {
         this.user.id = this.$route.params.id;
         if (!!this.user.id) {
           UserHelper.getUser(this.user.id).then(response => {
-            console.log(response.data);
+            console.log("user", response.data);
             this.user = JSON.parse(JSON.stringify(response.data));
             this.userEdit = this.user;
             console.log("user 196", this.user);

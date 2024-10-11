@@ -19,6 +19,7 @@ import Publication from "@/pages/publications/publication.vue";
 import Profile from "@/pages/user/profile.vue";
 
 
+
 const routes = [
   {
     path: '/',
@@ -45,6 +46,12 @@ const routes = [
     path: '/publications/publication/:id',
     name: 'publication',
     component: Publication,
+    props: true
+  },
+  {
+    path: '/user/publications/:userId',
+    name: 'user-publications',
+    component: Publications,
     props: true
   },
   {

@@ -59,14 +59,14 @@
                    height="250"
                    color="black"
             >
-              <!--              <template v-slot:placeholder>-->
-              <!--                <div class="d-flex align-center justify-center fill-height">-->
-              <!--                  <v-progress-circular-->
-              <!--                    color="grey-lighten-4"-->
-              <!--                    indeterminate-->
-              <!--                  ></v-progress-circular>-->
-              <!--                </div>-->
-              <!--              </template>-->
+              <template v-slot:placeholder>
+                <div class="d-flex align-center justify-center fill-height">
+                  <v-progress-circular
+                    color="grey-lighten-4"
+                    indeterminate
+                  ></v-progress-circular>
+                </div>
+              </template>
             </v-img> <!-- С помощью v-img добавляем изображение карточки -->
 
             <v-card-title class="text-wrap"> <!-- Заголовок заведения -->
@@ -93,6 +93,8 @@
 import UserHelper from "@/utils/user-helper";
 import axios from "axios";
 import ImageUtils from "@/utils/image-utils";
+import router from "@/router";
+import PublicationHelper from "@/utils/publications/publication-helper";
 
 export default {
   name: "publications",
@@ -100,21 +102,7 @@ export default {
     return {
       publications: null,
       searchField: null,
-      categories: [
-        {
-          id: 1,
-          title: "Category1",
-          children: [
-            {id: 2, title: 'Calendar : app'},
-            {id: 3, title: 'Chrome : app'},
-            {id: 4, title: 'Webstorm : app'},
-          ],
-        },
-        {
-          id: 2,
-          title: "Category2"
-        }
-      ]
+      categories: []
     }
   },
   methods: {
@@ -152,26 +140,50 @@ export default {
     openPublication(id) {
       console.log("publication id", id);
       console.log("isAuthorized:", UserHelper.isAuthorized());
-      if (UserHelper.isAuthorized()) {
-        this.$router.push(`/publications/publication/${id}`);
-      } else {
-        this.$router.push(`/registration`);
-      }
+      // if (UserHelper.isAuthorized()) {
+      this.$router.push(`/publications/publication/${id}`);
+      // } else {
+      //   this.$router.push(`/registration`);
+      // }
     },
   },
   async mounted() {
     console.log(localStorage.getItem('access_token'));
-    await axios.get("/publications/list/last").then(response => {
-      console.log("response:", response);
-      this.publications = response.data;
-      this.publications.forEach(item => {
-        console.log("item:", item)
-        item.image = ImageUtils.convertRawDataToSrc(item.image)
+    console.log("userId:", this.$route.params.userId);
+    console.log("this.route.name:", this.$route.name);
+
+    if (!!this.$route.params.userId) {
+      PublicationHelper.getPublicationsByUserId(this.$route.params.userId).then(response => {
+        this.publications = response.data;
+        this.publications.forEach(item => {
+          item.image = ImageUtils.convertRawDataToSrc(item.image)
+        })
+      }).catch(error => {
+        console.log(error.response);
+        console.log(error)
+        if (error.response.status === 401) {
+          UserHelper.unauthorize();
+          this.$router.go(this.$router.route);
+        }
       });
-      console.log('publications converted', this.publications);
-    }).catch(error => {
-      console.log("error", error)
-    });
+    } else {
+      await axios.get("/publications/list/last").then(response => {
+        console.log("response:", response);
+        this.publications = response.data;
+        this.publications.forEach(item => {
+          console.log("item:", item)
+          item.image = ImageUtils.convertRawDataToSrc(item.image)
+        });
+        console.log('publications converted', this.publications);
+      }).catch(error => {
+        console.log(error.response);
+        console.log(error)
+        if (error.response.status === 401) {
+          UserHelper.unauthorize();
+          this.$router.go("/");
+        }
+      });
+    }
   },
   created() {
     // this.categories = [

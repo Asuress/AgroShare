@@ -55,12 +55,12 @@ export default {
   mounted() {
     console.log("store?", this.$store.getters.username);
     console.log(localStorage.getItem('access_token'));
-    axios.get("/publications/list/last").then(response => {
-      console.log("response:", response);
-      this.publications = response.data;
-    }).catch(error => {
-      console.log("error", error)
-    });
+    // axios.get("/publications/list/last").then(response => {
+    //   console.log("response:", response);
+    //   this.publications = response.data;
+    // }).catch(error => {
+    //   console.log("error", error)
+    // });
     // console.log()
   }
 }

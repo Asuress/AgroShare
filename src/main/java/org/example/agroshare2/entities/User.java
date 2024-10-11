@@ -52,6 +52,9 @@ public class User implements UserDetails {
     @Column(name = "role", nullable = false)
     private Role role;
 
+    @Column(name = "image")
+    private byte[] image;
+
 //    @Column(name = "first_name", nullable = false)
 //    private String firstName;
 
