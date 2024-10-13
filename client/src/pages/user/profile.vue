@@ -70,7 +70,7 @@
           <v-text-field label="Имя" v-model="userEdit.firstName"></v-text-field>
           <v-text-field label="Отчество" v-model="userEdit.middleName"></v-text-field>
           <v-text-field label="Email" v-model="userEdit.email"></v-text-field>
-          <v-text-field label="Номер телефона" v-model="userEdit.phone"></v-text-field>
+          <v-text-field label="Номер телефона" v-model="userEdit.phoneNumber"></v-text-field>
           <!--          <v-textarea label="Биография" v-model="user.bio"></v-textarea>-->
         </v-card-text>
         <v-card-actions>

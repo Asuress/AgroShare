@@ -97,6 +97,13 @@ export default {
     return axios.get(`/user/get/${id}`);
   },
   updateUserInfo(id, user) {
-    return axios.post(`/user/change/${id}`, {user});
+    console.log("user to update", user);
+    return axios.post(`/user/change/${id}`, {
+      lastName: user.lastName,
+      firstName: user.firstName,
+      middleName: user.middleName,
+      email: user.email,
+      phoneNumber: user.phoneNumber
+    });
   }
 }
