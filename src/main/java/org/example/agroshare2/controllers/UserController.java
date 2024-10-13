@@ -1,10 +1,10 @@
 package org.example.agroshare2.controllers;
 
 import org.example.agroshare2.dto.PersonDto;
-import org.example.agroshare2.entities.User;
+import org.example.agroshare2.dto.UserDTO;
+import org.example.agroshare2.dto.UserProfileDto;
 import org.example.agroshare2.services.PublicationService;
 import org.example.agroshare2.services.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,7 +23,7 @@ public class UserController {
     }
 
     @GetMapping("/get/{id}")
-    public PersonDto get(@PathVariable Long id) {
+    public UserProfileDto get(@PathVariable Long id) {
         return userService.getUserById(id);
     }
 
@@ -32,5 +32,11 @@ public class UserController {
         userService.addImageToProfile(id, file);
 
         return "huy";
+    }
+
+    @PostMapping("/change/{id}")
+    public UserProfileDto changeFirstName(@PathVariable("id") Long id,
+                                          @RequestBody(required = true) UserProfileDto user) {
+        return userService.changeUserFirstName(id, user);
     }
 }

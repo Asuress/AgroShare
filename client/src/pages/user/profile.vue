@@ -9,14 +9,26 @@
       <v-col cols="12" md="4">
         <v-card class="elevation-1 rounded-lg px-4 py-6 text-center">
           <v-avatar size="100" class="mx-auto mb-4">
-            <img :src="avatarPreview || user.image" alt="Аватар пользователя" class="rounded-circle">
+            <v-img :src="avatarPreview || user.image"
+                   alt="Аватар пользователя"
+                   class="rounded-circle"
+                   aspect-ratio="1"
+            >
+            </v-img>
           </v-avatar>
 
           <!-- Кнопка для выбора нового изображения -->
           <v-btn class="my-custom-background-button mb-2" block rounded @click="triggerAvatarUpload">Изменить аватар</v-btn>
-          <input type="file" ref="avatarInput" @change="onAvatarChange" accept="image/*" style="display: none;"/>
+          <v-btn v-if="isChangeAvatar" @click="saveAvatar">Сохранить</v-btn>
+          <input type="file"
+                 ref="avatarInput"
+                 @change="onAvatarChange"
+                 accept="image/*"
+                 style="display: none;"/>
 
-          <h2 class="mb-2 font-weight-medium text-dark">{{ user.name }}</h2>
+          <h2 class="mb-2 font-weight-medium text-dark">{{ user.personType === "I" ?
+            `${user.lastName} ${user.firstName} ${user.middleName}`
+            : user.organization }}</h2>
           <p class="text-muted">{{ user.email }}</p>
           <p class="text-muted mb-4">{{ user.bio }}</p>
 
@@ -34,10 +46,10 @@
               v-for="announcement in user.announcements"
               :key="announcement.id"
             >
-              <v-list-item-content>
+<!--              <v-list-item-content>-->
                 <v-list-item-title>{{ announcement.title }}</v-list-item-title>
                 <v-list-item-subtitle>{{ announcement.description }}</v-list-item-subtitle>
-              </v-list-item-content>
+<!--              </v-list-item-content>-->
               <v-list-item-action>
                 <v-btn class="my-custom-background-button" small @click="viewAnnouncement(announcement.id)">Просмотреть</v-btn>
               </v-list-item-action>
@@ -54,8 +66,11 @@
       <v-card>
         <v-card-title class="headline">Редактирование профиля</v-card-title>
         <v-card-text>
-          <v-text-field label="Имя" v-model="userEdit.name"></v-text-field>
+          <v-text-field label="Фамилия" v-model="userEdit.lastName"></v-text-field>
+          <v-text-field label="Имя" v-model="userEdit.firstName"></v-text-field>
+          <v-text-field label="Отчество" v-model="userEdit.middleName"></v-text-field>
           <v-text-field label="Email" v-model="userEdit.email"></v-text-field>
+          <v-text-field label="Номер телефона" v-model="userEdit.phone"></v-text-field>
           <!--          <v-textarea label="Биография" v-model="user.bio"></v-textarea>-->
         </v-card-text>
         <v-card-actions>
@@ -108,12 +123,10 @@ export default {
       announcements: [],
       userEdit: {
         id: this.$route.params.id,
-        avatar: null,
-        name: null,
-        email: null,
-        bio: null,
       },
       avatarPreview: '', // Для предварительного просмотра аватара
+      isChangeAvatar: false,
+      file: null,
       profileDialog: false,
       passwordDialog: false,
       currentPassword: '',
@@ -133,8 +146,12 @@ export default {
     // Логика сохранения профиля
     saveProfile() {
       this.profileDialog = false;
-      // Здесь можно добавить логику для сохранения профиля, например, через API-запрос
       console.log("Профиль сохранён:", this.user);
+      UserHelper.updateUserInfo(this.userId, this.userEdit).then(response => {
+        this.user = JSON.parse(JSON.stringify(response.data));
+        this.fetchData();
+        console.log("Профиль сохранён 2:", this.user);
+      });
     },
     // Логика смены пароля
     savePassword() {
@@ -161,36 +178,37 @@ export default {
     },
     // Изменение аватара
     onAvatarChange(event) {
-      const file = event.target.files[0];
-      if (file) {
+      this.isChangeAvatar = true;
+      this.file = event.target.files[0];
+      if (this.file) {
         const reader = new FileReader();
         reader.onload = (e) => {
           this.avatarPreview = e.target.result;
-          console.log("image", e.target.result)// Показываем превью аватара
         };
-        reader.readAsDataURL(file);
-        console.log()
-        ImageUtils.setProfileData(this.user.id, this.avatarPreview);
+        reader.readAsDataURL(this.file);
       }
+    },
+    saveAvatar() {
+      ImageUtils.setProfileData(this.userId, this.file).catch(e => {
+        console.log("error", e)
+      });
+      this.isChangeAvatar = false;
     },
     async fetchData() {
       this.loading = true; // Устанавливаем флаг загрузки
       try {
-        console.log("params.id", this.$route.params.id);
-        console.log("is integer", !!this.$route.params.id);
         this.user.id = this.$route.params.id;
+        console.log("!!user.id", !!this.user.id)
         if (!!this.user.id) {
           UserHelper.getUser(this.user.id).then(response => {
-            console.log("user", response.data);
+            console.log("user", response.data)
             this.user = JSON.parse(JSON.stringify(response.data));
-            this.userEdit = this.user;
-            console.log("user 196", this.user);
+            this.userEdit = JSON.parse(JSON.stringify(response.data));
+            this.user.image = ImageUtils.convertRawDataToSrc(this.user.image)
+            console.log("user", this.user)
             PublicationHelper.getPublicationsByUserId(this.$route.params.id).then(response => {
               this.user.announcements = response.data;
               this.announcements = response.data;
-              console.log("publications", this.user.announcements);
-              console.log("publications2", this.announcements);
-              console.log("user publ", this.user);
             });
           });
         } else {

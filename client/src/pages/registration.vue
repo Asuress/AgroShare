@@ -95,12 +95,12 @@ export default {
   methods: {
     register() {
       console.log("register", this.user)
-      alert('Регистрация пользователей ограничена! Свяжитесь с техподдержкой.');
-      // UserHelper.register(this.user.username,
-      //   this.user.password,
-      //   this.user.email,
-      //   this.user.type);
-      // this.$router.go(-1);
+      // alert('Регистрация пользователей ограничена! Свяжитесь с техподдержкой.');
+      UserHelper.register(this.user.username,
+        this.user.password,
+        this.user.email,
+        this.user.type);
+      this.$router.go(-1);
     },
     required(v) {
       return !!v || 'Field is required'

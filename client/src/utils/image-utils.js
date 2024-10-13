@@ -7,13 +7,16 @@ export default {
   convertSrcToRawData() {
 
   },
-  setProfileData(id, avatarPreview) {
-    let data = new FormData();
-    data.append('image', avatarPreview);
+  setProfileData(id, file) {
+    let formData = new FormData();
+    formData.append('file', file);
+    console.log("data", formData)
 
-    axios.post(`/user/${id}/set-image`, avatarPreview,
+    return axios.post(`/user/${id}/set-image`, formData,
       {
-      'Content-Type': `multipart/form-data; boundary=${avatarPreview._boundary}`
-    })
+        headers: {
+          'Content-Type': `multipart/form-data;`
+        }
+      })
   }
 }

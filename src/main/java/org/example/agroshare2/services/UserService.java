@@ -1,7 +1,10 @@
 package org.example.agroshare2.services;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.agroshare2.dto.PersonDto;
+import org.example.agroshare2.dto.UserDTO;
+import org.example.agroshare2.dto.UserProfileDto;
 import org.example.agroshare2.entities.Individual;
 import org.example.agroshare2.entities.Legal;
 import org.example.agroshare2.entities.Role;
@@ -58,6 +61,25 @@ public class UserService {
             throw new RuntimeException("Пользователь с таким email уже существует");
         }
 
+        String personType = user.getPersonType();
+
+        switch (personType) {
+            case "I":
+                Individual individual = Individual.builder()
+                        .build();
+                individualRepository.save(individual);
+                user.setTypedUserId(individual.getId());
+                break;
+            case "L":
+                Legal legal = Legal.builder()
+                        .build();
+                legalRepository.save(legal);
+                user.setTypedUserId(legal.getId());
+                break;
+            default:
+                throw new RuntimeException("Хуйня какая-то");
+        }
+
         return save(user);
     }
 
@@ -107,35 +129,35 @@ public class UserService {
         save(user);
     }
 
-    public PersonDto getUserById(Long id) {
-        return entityToView(repository.findById(id).orElseThrow());
+    public UserProfileDto getUserById(Long id) {
+        return mapEntityToView(repository.findById(id).orElseThrow());
     }
 
-    private PersonDto entityToView(User user) {
-        PersonDto person = PersonDto.builder()
-                .userType(user.getPersonType())
-                .username(user.getUsername())
-                .email(user.getEmail())
-                .inn(user.getInn())
-                .phoneNumber(user.getPhoneNumber())
-                .image(user.getImage())
-                .build();
-
-        if ("I".equals(user.getPersonType()) && user.getTypedUserId() != null) {
-            Optional<Individual> individual = individualRepository.findById(user.getTypedUserId());
-            if (individual.isPresent()) {
-                person.setFirstName(individual.get().getFirstName());
-                person.setLastName(individual.get().getLastName());
-            }
-        } else if ("L".equals(user.getPersonType()) && user.getTypedUserId() != null) {
-            Optional<Legal> legal = legalRepository.findById(user.getTypedUserId());
-            if (legal.isPresent()) {
-                person.setOrganizationName(legal.get().getOrganizationName());
-            }
-        }
-
-        return person;
-    }
+//    private PersonDto entityToView(User user) {
+//        PersonDto person = PersonDto.builder()
+//                .userType(user.getPersonType())
+//                .username(user.getUsername())
+//                .email(user.getEmail())
+//                .inn(user.getInn())
+//                .phoneNumber(user.getPhoneNumber())
+//                .image(user.getImage())
+//                .build();
+//
+//        if ("I".equals(user.getPersonType()) && user.getTypedUserId() != null) {
+//            Optional<Individual> individual = individualRepository.findById(user.getTypedUserId());
+//            if (individual.isPresent()) {
+//                person.setFirstName(individual.get().getFirstName());
+//                person.setLastName(individual.get().getLastName());
+//            }
+//        } else if ("L".equals(user.getPersonType()) && user.getTypedUserId() != null) {
+//            Optional<Legal> legal = legalRepository.findById(user.getTypedUserId());
+//            if (legal.isPresent()) {
+//                person.setOrganizationName(legal.get().getOrganizationName());
+//            }
+//        }
+//
+//        return person;
+//    }
 
     public void addImageToProfile(Long id, MultipartFile file) {
         Optional<User> userById = userRepository.findById(id);
@@ -147,5 +169,58 @@ public class UserService {
             e.printStackTrace();
         }
         userRepository.save(user);
+    }
+
+    @Transactional
+    public UserProfileDto changeUserFirstName(Long id, UserProfileDto userProfileDto) {
+        User user = userRepository.findById(id).orElseThrow();
+        String personType = user.getPersonType();
+        switch (personType) {
+            case "I":
+                Individual individual = individualRepository.findById(user.getTypedUserId()).orElseThrow();
+                individual.setFirstName(userProfileDto.getFirstName());
+                individual.setLastName(userProfileDto.getLastName());
+                individual.setMiddleName(userProfileDto.getMiddleName());
+                individualRepository.save(individual);
+                break;
+            case "L":
+                Legal legal = legalRepository.findById(user.getTypedUserId()).orElseThrow();
+                legal.setOrganizationName(userProfileDto.getOrganizationName());
+                legalRepository.save(legal);
+                break;
+        }
+        user.setEmail(userProfileDto.getEmail());
+        user.setInn(userProfileDto.getInn());
+        user.setLocation(userProfileDto.getLocation());
+        user.setPhoneNumber(userProfileDto.getPhoneNumber());
+        userRepository.save(user);
+        return mapEntityToView(user);
+    }
+
+    private UserProfileDto mapEntityToView(User user) {
+        String personType = user.getPersonType();
+        UserProfileDto.UserProfileDtoBuilder userProfileBuilder =
+                UserProfileDto.builder()
+                .id(user.getId())
+                .personType(user.getPersonType())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .inn(user.getInn())
+                .phoneNumber(user.getPhoneNumber())
+                .image(user.getImage())
+                .location(user.getLocation());
+        switch (personType) {
+            case "I":
+                Individual individual = individualRepository.findById(user.getTypedUserId()).orElseThrow();
+                userProfileBuilder.firstName(individual.getFirstName())
+                        .lastName(individual.getLastName())
+                        .middleName(individual.getMiddleName());
+                break;
+            case "L":
+                Legal legal = legalRepository.findById(user.getTypedUserId()).orElseThrow();
+                userProfileBuilder.organizationName(legal.getOrganizationName());
+                break;
+        }
+        return userProfileBuilder.build();
     }
 }

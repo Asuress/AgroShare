@@ -95,5 +95,8 @@ export default {
   },
   getUser(id) {
     return axios.get(`/user/get/${id}`);
+  },
+  updateUserInfo(id, user) {
+    return axios.post(`/user/change/${id}`, {user});
   }
 }

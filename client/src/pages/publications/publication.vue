@@ -8,17 +8,23 @@
                  alt="Image of ad"
                  aspect-ratio="1"
                  height="400"
+                 color="white"
                  cover
-                 contain>
+                 contain
+          >
 
           </v-img>
-          <v-btn icon color="red" @click="toggleFavorite">
+          <v-btn icon
+                 color="red"
+                 @click="toggleFavorite"
+                 class="mt-4 ml-4"
+          >
             <v-icon>{{ isFavorite ? 'mdi-heart' : 'mdi-heart-outline' }}</v-icon>
           </v-btn>
         </v-col>
 
         <!-- Описание товара -->
-        <v-col cols="7">
+        <v-col cols="6" class="pt-6">
           <v-card-title class="headline" wrap>{{ ad.title }}</v-card-title>
           <v-card-subtitle class="category">
             Категория: {{ ad.category }}
@@ -28,7 +34,6 @@
             {{ ad.location }}
           </p>
           <v-divider></v-divider>
-
           <v-card-text>
             <p class="price" v-if="!!ad.price">Цена: {{ formatPrice(ad.price) }} руб.</p>
             <h1>Описание</h1>
@@ -46,21 +51,33 @@
 
           <!-- Информация о продавце -->
           <v-divider></v-divider>
-          <v-card-subtitle class="seller-info">
-            Продавец: {{ ad.email }}
-          </v-card-subtitle>
+          <v-row class="pt-5 pl-2 pb-5">
+            <v-col cols="6">
+              <v-card-subtitle class="seller-info">
+                Продавец: {{ ad.publisher }}
+              </v-card-subtitle>
+            </v-col>
+            <v-col cols="2">
+              <v-img @click="goToPublisherProfile"
+                     alt="Image of publisher"
+                     height="50"
+                     max-width="50"
+                     color="white"
+                     aspect-ratio="1"
+                     rounded="true"
+              >
+              </v-img>
+            </v-col>
+          </v-row>
           <v-btn class="my-custom-background-button" @click="viewSellerAds">Все объявления продавца</v-btn>
         </v-col>
-        <v-col>
-<!--          <app-calendar v-if="ad.publicationType === 'R'"-->
-<!--          >-->
-<!--          </app-calendar>-->
-        </v-col>
-        <v-col>
-          <app-calendar v-if="ad.publicationType === 'R'"
-          >
-          </app-calendar>
-        </v-col>
+        <v-row class="d-flex justify-content-end">
+          <v-col cols="5" class="d-flex justify-content-end">
+            <app-calendar v-if="ad.publicationType === 'R'"
+            >
+            </app-calendar>
+          </v-col>
+        </v-row>
       </v-row>
 
       <!-- Модальное окно для показа телефона -->
@@ -128,6 +145,9 @@ export default {
     viewSimilarAd(id) {
       this.$router.push({name: 'adDetails', params: {id}});
     },
+    goToPublisherProfile() {
+      this.$router.push(`/profile/another-profile/${this.ad.publisherId}`)
+    },
     async fetchData() {
       this.loading = true; // Устанавливаем флаг загрузки
       try {
@@ -136,7 +156,7 @@ export default {
           console.log("publication data", response.data);
           this.ad = response.data;
 
-          this.ad.image = ImageUtils.convertRawDataToSrc(this.ad.image)
+          // this.ad.image = ImageUtils.convertRawDataToSrc(this.ad.image)
 
           // let base64String = btoa(
           //   String.fromCharCode.apply(null, new Uint8Array(this.ad.image))

@@ -19,9 +19,8 @@
               <v-col>
                 <v-autocomplete
                   label="Категория"
-                  v-model="publication.selected"
+                  v-model="publication.category"
                   :items="categories"
-                  item-title=""
                 >
 
                 </v-autocomplete>
@@ -53,31 +52,39 @@
             <v-row>
               <v-col class="v-col-md-2">
                 <v-radio-group inline
-                               v-model="publication.isRent"
+                               v-model="publication.publicationType"
                 >
                   <v-radio label="Аренда"
-                           value="true"
+                           value="R"
                   >
 
                   </v-radio>
                   <v-radio label="Продажа"
-                           value="false"
+                           value="S"
                   >
 
                   </v-radio>
                 </v-radio-group>
               </v-col>
               <v-col class="v-col-md-2">
-                <v-btn icon="attach" class="my-custom-background-button mb-2" block rounded
-                       @click="triggerPublicationImageUpload">Добавить фото
+                <v-btn icon="attach"
+                       class="my-custom-background-button mb-2"
+                       block
+                       rounded
+                       @click="triggerPublicationImageUpload"
+                >Добавить фото
                 </v-btn>
-                <input type="file" ref="publicationImageRef" @change="onPublicationImageChange" accept="image/*"
+                <input type="file"
+                       ref="publicationImageRef"
+                       @change="onPublicationImageChange" accept="image/*"
                        style="display: none;"/>
               </v-col>
               <v-col class="v-col-md-8">
-                <!--              <v-avatar size="100" class="mx-auto mb-4">-->
-                <v-img :src="publication.publicationImage"/>
-                <!--              </v-avatar>-->
+                <v-img :src="publication.image"
+                       width="400"
+                       height="400"
+                       aspect-ratio="1"
+                />
               </v-col>
             </v-row>
           </v-form>
@@ -109,13 +116,15 @@ export default {
   data() {
     return {
       publication: {
-        title: '',
-        description: '',
-        price: '',
-        selected: '',
-        isRent: true,
-        username: '',
-        publicationImage: null
+        id: null,
+        title: null,
+        description: null,
+        price: null,
+        publicationType: null,
+        category: null,
+        publisherEmail: null,
+        publisherId: this.$store.getters.id,
+        image: null
       },
       categories: [],
     }
@@ -137,8 +146,8 @@ export default {
       if (file) {
         const reader = new FileReader();
         reader.onload = (e) => {
-          this.publication.publicationImage = e.target.result; // Показываем превью аватара
-          console.log("publication image:", this.publication.publicationImage);
+          this.publication.image = e.target.result; // Показываем превью аватара
+          console.log("publication image:", this.publication.image);
         };
         reader.readAsDataURL(file);
       }
@@ -147,7 +156,8 @@ export default {
   created() {
     PublicationHelper.getCategories((data) => {
       console.log("data", data);
-      this.categories = data.map(item => {
+      this.categories = data
+        .map(item => {
         return item.categoryName;
       });
     });

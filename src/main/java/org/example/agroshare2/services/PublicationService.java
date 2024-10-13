@@ -17,10 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -61,6 +58,7 @@ public class PublicationService {
         publication.setPrice(publicationDto.getPrice());
         publication.setPublicationType(publicationDto.getPublicationType());
         publication.setDescription(publicationDto.getDescription());
+        publication.setImage(publicationDto.getImage());
 
         Optional<Category> category = categoryRepository.findByCategoryName(publicationDto.getCategory());
         publication.setCategory(category.isPresent() ? category.get().getCategoryId() : null);
@@ -86,7 +84,7 @@ public class PublicationService {
     public void addImageToPublication(Long id, MultipartFile file) throws IOException {
         Publication publication = publicationRepository.findById(id).orElseThrow();
         Resource resource = file.getResource();
-        publication.setImage(file.getBytes());
+        publication.setImage(file.getContentType() + Arrays.toString(file.getBytes()));
         publicationRepository.save(publication);
     }
 

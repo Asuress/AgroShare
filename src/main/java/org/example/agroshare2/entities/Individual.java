@@ -2,6 +2,7 @@ package org.example.agroshare2.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 @Getter
 @Setter
@@ -16,13 +17,16 @@ public class Individual {
     @Column(name = "individual_id")
     private Long id;
 
-    @Column(name = "first_name")
+    @Column(name = "first_name", nullable = false)
+    @ColumnDefault("")
     private String firstName;
 
-    @Column(name = "last_name")
+    @Column(name = "last_name", nullable = false)
+    @ColumnDefault("")
     private String lastName;
 
-    @Column(name = "second_name")
+    @Column(name = "second_name", nullable = false)
+    @ColumnDefault("")
     private String middleName;
 
 }

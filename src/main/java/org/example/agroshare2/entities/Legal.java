@@ -2,6 +2,7 @@ package org.example.agroshare2.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 @Getter
 @Setter
@@ -16,6 +17,7 @@ public class Legal {
     @Column(name = "individual_id")
     private Long id;
 
-    @Column(name = "legal_name")
+    @Column(name = "legal_name", nullable = false)
+    @ColumnDefault("")
     private String organizationName;
 }

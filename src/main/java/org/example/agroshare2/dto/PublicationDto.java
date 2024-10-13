@@ -15,5 +15,5 @@ public class PublicationDto {
     private String category;
     private String publisherEmail;
     private Long publisherId;
-    private byte[] image;
+    private String image;
 }

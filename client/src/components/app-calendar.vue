@@ -1,20 +1,22 @@
 <template>
   <v-container flex>
-    <v-row>
-      <v-col>
-        <v-switch label="Использовать промежуток"
-                  hide-details
-                  color="blue"
-                  v-model="useRange"
-        >
-        </v-switch>
-      </v-col>
-      <v-col>
-        <v-btn class="my-custom-background-button-primary"
-               @click="resetDates">Сбросить даты</v-btn>
-      </v-col>
-    </v-row>
-    <v-row>
+    <v-col align-self="end">
+      <v-row>
+        <v-col align-self="end">
+          <v-switch label="Использовать промежуток"
+                    hide-details
+                    color="blue"
+                    v-model="useRange"
+                    class="switch-end"
+          >
+          </v-switch>
+        </v-col>
+        <v-col>
+          <v-btn class="my-custom-background-button-primary"
+                 @click="resetDates">Сбросить даты
+          </v-btn>
+        </v-col>
+      </v-row>
       <v-date-picker
         v-model="dates"
         header="Выберите дату аренды"
@@ -25,7 +27,7 @@
         first-day-of-week="1"
       >
       </v-date-picker>
-    </v-row>
+    </v-col>
   </v-container>
 </template>
 
@@ -54,3 +56,10 @@ export default {
   }
 }
 </script>
+
+<style>
+.switch-end {
+  display: flex;
+  justify-content: end;
+}
+</style>

@@ -155,9 +155,9 @@ export default {
     if (!!this.$route.params.userId) {
       PublicationHelper.getPublicationsByUserId(this.$route.params.userId).then(response => {
         this.publications = response.data;
-        this.publications.forEach(item => {
-          item.image = ImageUtils.convertRawDataToSrc(item.image)
-        })
+        // this.publications.forEach(item => {
+        //   item.image = ImageUtils.convertRawDataToSrc(item.image)
+        // })
       }).catch(error => {
         console.log(error.response);
         console.log(error)
@@ -170,10 +170,10 @@ export default {
       await axios.get("/publications/list/last").then(response => {
         console.log("response:", response);
         this.publications = response.data;
-        this.publications.forEach(item => {
-          console.log("item:", item)
-          item.image = ImageUtils.convertRawDataToSrc(item.image)
-        });
+        // this.publications.forEach(item => {
+        //   console.log("item:", item)
+        //   item.image = ImageUtils.convertRawDataToSrc(item.image)
+        // });
         console.log('publications converted', this.publications);
       }).catch(error => {
         console.log(error.response);

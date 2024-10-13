@@ -8,9 +8,10 @@ export default {
       title: publication.title,
       description: publication.description,
       price: publication.price,
-      category: publication.selected,
-      publicationType: publication.isRent === true ? "R" : "S",
-      publisher: publication.username
+      category: publication.category,
+      publicationType: publication.publicationType,
+      publisherId: publication.publisherId,
+      image: publication.image
     }).then(response => {
       console.log(response.data);
       // callback(response.data);
