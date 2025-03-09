@@ -19,7 +19,7 @@ import {createVuetify} from "vuetify";
 import {components, directives} from "vuetify/dist/vuetify";
 import {aliases, mdi} from "vuetify/iconsets/mdi";
 
-Axios.defaults.baseURL = "http://80.242.58.150:8001/api/"
+Axios.defaults.baseURL = "https://80.242.58.150:8001/api/"
 // Axios.defaults.baseURL = "http://localhost:8080/"
 
 // Создание Vuetify экземпляра с настройками темы
