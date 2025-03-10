@@ -146,11 +146,9 @@ export default {
     // Логика сохранения профиля
     saveProfile() {
       this.profileDialog = false;
-      console.log("Профиль сохранён:", this.user);
       UserHelper.updateUserInfo(this.userId, this.userEdit).then(response => {
         this.user = JSON.parse(JSON.stringify(response.data));
         this.fetchData();
-        console.log("Профиль сохранён 2:", this.user);
       });
     },
     // Логика смены пароля
@@ -161,7 +159,6 @@ export default {
       }
       this.passwordDialog = false;
       // Логика смены пароля, например, отправка запроса на сервер
-      console.log("Пароль сменён");
     },
     // Логика просмотра объявления
     viewAnnouncement(id) {
@@ -190,7 +187,6 @@ export default {
     },
     saveAvatar() {
       ImageUtils.setProfileData(this.userId, this.file).catch(e => {
-        console.log("error", e)
       });
       this.isChangeAvatar = false;
     },
@@ -198,14 +194,11 @@ export default {
       this.loading = true; // Устанавливаем флаг загрузки
       try {
         this.user.id = this.$route.params.id;
-        console.log("!!user.id", !!this.user.id)
         if (!!this.user.id) {
           UserHelper.getUser(this.user.id).then(response => {
-            console.log("user", response.data)
             this.user = JSON.parse(JSON.stringify(response.data));
             this.userEdit = JSON.parse(JSON.stringify(response.data));
             this.user.image = ImageUtils.convertRawDataToSrc(this.user.image)
-            console.log("user", this.user)
             PublicationHelper.getPublicationsByUserId(this.$route.params.id).then(response => {
               this.user.announcements = response.data;
               this.announcements = response.data;

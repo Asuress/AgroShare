@@ -44,13 +44,10 @@ export default {
   methods: {
     saveDate() {
       this.modal = false;
-      console.log("Selected date:", this.dates);
     },
     cancel() {
-      console.log("cancel");
     },
     resetDates() {
-      console.log("reset dates");
       this.dates = [];
     }
   }

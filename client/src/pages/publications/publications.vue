@@ -108,38 +108,29 @@ export default {
   methods: {
     addPublish() {
       if (UserHelper.isAuthorized()) {
-        console.log("Authorized");
         this.$router.push('/add-publication').catch(e => {
-          console.log("error", e);
         });
       } else {
         this.$router.push("/login")
       }
-      console.log("end");
     },
     search() {
-      console.log("this.searchField", this.searchField)
       if (this.searchField !== null && this.searchField !== '') {
         axios.get("/publications/find", {
           params: {
             title: this.searchField
           }
         }).then(response => {
-          console.log(response.data)
           this.publications = response.data;
         })
       } else {
         axios.get("/publications/list/last").then(response => {
-          console.log("response:", response);
           this.publications = response.data;
         }).catch(error => {
-          console.log("error", error)
         });
       }
     },
     openPublication(id) {
-      console.log("publication id", id);
-      console.log("isAuthorized:", UserHelper.isAuthorized());
       // if (UserHelper.isAuthorized()) {
       this.$router.push(`/publications/publication/${id}`);
       // } else {
@@ -148,9 +139,6 @@ export default {
     },
   },
   async mounted() {
-    console.log(localStorage.getItem('access_token'));
-    console.log("userId:", this.$route.params.userId);
-    console.log("this.route.name:", this.$route.name);
 
     if (!!this.$route.params.userId) {
       PublicationHelper.getPublicationsByUserId(this.$route.params.userId).then(response => {
@@ -168,13 +156,7 @@ export default {
       });
     } else {
       await axios.get("/publications/list/last").then(response => {
-        console.log("response:", response);
         this.publications = response.data;
-        // this.publications.forEach(item => {
-        //   console.log("item:", item)
-        //   item.image = ImageUtils.convertRawDataToSrc(item.image)
-        // });
-        console.log('publications converted', this.publications);
       }).catch(error => {
         console.log(error.response);
         console.log(error)
@@ -196,7 +178,6 @@ export default {
     //     title: "Category2"
     //   }
     // ];
-    console.log("categories", this.categories)
   }
 }
 </script>
