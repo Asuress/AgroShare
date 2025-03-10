@@ -10,7 +10,6 @@ export default {
   setProfileData(id, file) {
     let formData = new FormData();
     formData.append('file', file);
-    console.log("data", formData)
 
     return axios.post(`/user/${id}/set-image`, formData,
       {

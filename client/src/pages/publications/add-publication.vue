@@ -134,7 +134,6 @@ export default {
       router.go(-1);
     },
     addPublication() {
-      console.log("new publication data:", this.publication);
       PublicationHelper.addPublication(this.publication);
     },
     triggerPublicationImageUpload() {
@@ -147,7 +146,6 @@ export default {
         const reader = new FileReader();
         reader.onload = (e) => {
           this.publication.image = e.target.result; // Показываем превью аватара
-          console.log("publication image:", this.publication.image);
         };
         reader.readAsDataURL(file);
       }
@@ -155,7 +153,6 @@ export default {
   },
   created() {
     PublicationHelper.getCategories((data) => {
-      console.log("data", data);
       this.categories = data
         .map(item => {
         return item.categoryName;

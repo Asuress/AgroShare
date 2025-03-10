@@ -48,20 +48,10 @@ export default {
   },
   methods: {
     handleUsernameChange(newUsername) {
-      console.log("handleUsernameChange");
       this.$emit('usernameChanged', newUsername);
     }
   },
   mounted() {
-    console.log("store?", this.$store.getters.username);
-    console.log(localStorage.getItem('access_token'));
-    // axios.get("/publications/list/last").then(response => {
-    //   console.log("response:", response);
-    //   this.publications = response.data;
-    // }).catch(error => {
-    //   console.log("error", error)
-    // });
-    // console.log()
   }
 }
 </script>

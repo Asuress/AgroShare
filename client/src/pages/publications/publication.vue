@@ -151,9 +151,7 @@ export default {
     async fetchData() {
       this.loading = true; // Устанавливаем флаг загрузки
       try {
-        console.log("params.id", this.$route.params.id);
         await PublicationHelper.getPublicationInfoById(this.$route.params.id).then(response => {
-          console.log("publication data", response.data);
           this.ad = response.data;
 
           // this.ad.image = ImageUtils.convertRawDataToSrc(this.ad.image)

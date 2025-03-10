@@ -94,7 +94,6 @@ export default {
   },
   methods: {
     register() {
-      console.log("register", this.user)
       // alert('Регистрация пользователей ограничена! Свяжитесь с техподдержкой.');
       UserHelper.register(this.user.username,
         this.user.password,

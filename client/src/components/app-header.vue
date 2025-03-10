@@ -73,22 +73,17 @@ import UserHelper from "@/utils/user-helper";
 export default {
   computed: {
     innerUsername() {
-      console.log(this.$store.getters.username !== '' && this.$store.getters.username !== null && this.$store.getters.username !== undefined)
-      console.log('computed username in app-header', this.$store.getters.username);
       return this.$store.getters.username;
     },
     isAuthorized() {
       let username = this.$store.state.username;
-      console.log('computed isAuthorized in app-header', username !== null && username !== '' && username !== undefined);
       return this.$store.state.username !== null && this.$store.state.username !== '' && this.$store.state.username !== undefined;
     }
   },
   watch: {
     innerUsername(newUsername, oldUsername) {
-      console.log(`We have ${newUsername} fruits now, yay!`)
     },
     isAuthorized(newValue, oldValue) {
-      console.log(`is authorized: ${newValue}`);
     },
   },
   mixins: [
@@ -117,7 +112,6 @@ export default {
   }),
   methods: {
     login() {
-      console.log("before push to login")
       this.$router.push("/login");
       // this.innerUsername = UserHelper.getUsername();
     },
@@ -130,12 +124,10 @@ export default {
       // this.innerUsername = '';
     },
     profile() {
-      console.log("id:", this.$store.getters.id);
       this.$router.push(`/profile/another-profile/${this.$store.getters.id}`);
     }
   },
   mounted() {
-    console.log("mounted");
     // this.innerUsername = UserHelper.getUsername();
   }
 }
